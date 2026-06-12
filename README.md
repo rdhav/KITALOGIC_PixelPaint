@@ -36,6 +36,7 @@ Aplikasi berbasis Java memungkinkan pengguna untuk menemukan, mengunduh, dan mem
 ## Struktur Folder
 
 - `src/models`
+- `src/interfaces`
 - `src/views`
 - `src/database`
 - `src/images`
