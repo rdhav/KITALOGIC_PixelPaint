@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package models;
+import interfaces.GalleryProvider;
 import database.DBConnection;
 import java.sql.*;
 import java.util.ArrayList;
@@ -14,10 +15,13 @@ import java.util.List;
  */
 public class WallpaperPrivate extends Wallpaper implements GalleryProvider{
     
-    public WallpaperPrivate() {
-     super();
+    public WallpaperPrivate(){super();}
+    
+    public WallpaperPrivate(int id, String title, String category, String imagePath, String description, int userId,String timeAdded) {
+     super(id, title, category, imagePath, description,userId,timeAdded);
     }
     
+    @Override
     public List<Wallpaper> getGalleryWallpaper(int userId) {
         
         List<Wallpaper> list = new ArrayList<>();
@@ -32,14 +36,15 @@ public class WallpaperPrivate extends Wallpaper implements GalleryProvider{
             ResultSet rs = pstmt.executeQuery();
             
                 while (rs.next()) {
-                    Wallpaper wp = new Wallpaper();
-                    wp.setId(rs.getInt("id"));
-                    wp.setTitle(rs.getString("title"));
-                    wp.setDescription(rs.getString("description"));
-                    wp.setCategory(rs.getString("category"));
-                    wp.setImagePath(rs.getString("image_path"));
-                    wp.setUserId(rs.getInt("user_id"));
-                    wp.setTimeAdded(rs.getString("created_at"));
+                    Wallpaper wp = new WallpaperPrivate(
+                        rs.getInt("id"),
+                        rs.getString("title"),
+                        rs.getString("category"),
+                        rs.getString("image_path"),
+                        rs.getString("description"),
+                        rs.getInt("user_id"),
+                        rs.getString("created_at")
+                    );
                     list.add(wp);
                 }    
             

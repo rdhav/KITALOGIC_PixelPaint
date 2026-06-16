@@ -4,6 +4,15 @@
  */
 package views;
 
+import components.WallpaperCard;
+import interfaces.GalleryProvider;
+import java.awt.BorderLayout;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import models.Wallpaper;
+import models.WallpaperPublic;
+
 /**
  *
  * @author Nice
@@ -15,8 +24,26 @@ public class HomeFrame extends javax.swing.JFrame {
     /**
      * Creates new form HomeFrame
      */
-    public HomeFrame() {
-        initComponents();
+    
+    private int currentUserId;
+    private String currentUsername;
+    private boolean isUserLoggedIn = false;
+
+    public HomeFrame(boolean isLogin, int userID, String username) { 
+        this.currentUserId = -1;
+        this.isUserLoggedIn = isLogin;
+
+        if (isLogin) {
+           this.currentUserId = userID;
+           this.currentUsername = username;
+           
+        }
+
+        initComponents();   
+        ShowWallpaperGalleryAll();
+        
+        jLabelUsernameHomePage.setText(currentUsername);
+        
     }
 
     /**
@@ -28,22 +55,108 @@ public class HomeFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        jPanel1 = new javax.swing.JPanel();
+        jLabelProfileIcon = new javax.swing.JLabel();
+        jLabelUsernameHomePage = new javax.swing.JLabel();
+        jLabelTotalWallpaperHomePage = new javax.swing.JLabel();
+        jScrollPanePublicWallpaperGallery = new javax.swing.JScrollPane();
+        jPanelHomeGallery = new javax.swing.JPanel();
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Home Page");
+        setPreferredSize(new java.awt.Dimension(1080, 412));
+
+        jLabelProfileIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons8-profile-48.png"))); // NOI18N
+        jLabelProfileIcon.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabelProfileIcon.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabelProfileIconMouseClicked(evt);
+            }
+        });
+
+        jLabelUsernameHomePage.setText("Username");
+
+        jLabelTotalWallpaperHomePage.setText("Total wallpaper  ");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabelProfileIcon)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabelUsernameHomePage)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 878, Short.MAX_VALUE)
+                .addComponent(jLabelTotalWallpaperHomePage)
+                .addContainerGap())
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabelUsernameHomePage)
+                .addGap(20, 20, 20))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabelProfileIcon)
+                    .addComponent(jLabelTotalWallpaperHomePage))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        getContentPane().add(jPanel1, java.awt.BorderLayout.NORTH);
+
+        jPanelHomeGallery.setBackground(new java.awt.Color(204, 204, 204));
+        jPanelHomeGallery.setLayout(new java.awt.GridLayout());
+        jScrollPanePublicWallpaperGallery.setViewportView(jPanelHomeGallery);
+
+        getContentPane().add(jScrollPanePublicWallpaperGallery, java.awt.BorderLayout.CENTER);
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jLabelProfileIconMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelProfileIconMouseClicked
+        // TODO add your handling code here:        
+        if (!isUserLoggedIn){
+            JOptionPane.showMessageDialog(this, "Akses Ditolak! Anda harus login terlebih dahulu untuk melihat profil.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        } 
+        
+        this.dispose();
+        
+        ProfileFrame profilePage = new ProfileFrame(currentUserId, "", "");
+        profilePage.setVisible(true);
+    }//GEN-LAST:event_jLabelProfileIconMouseClicked
+
+    private void ShowWallpaperGalleryAll () {
+        
+        jPanelHomeGallery.removeAll();
+        jPanelHomeGallery.setLayout(new java.awt.GridLayout(0, 5, 15, 15));
+        
+        //wallpaper public
+        GalleryProvider gallery = new WallpaperPublic();
+        
+        List<Wallpaper> daftarWallpaper =  gallery.getGalleryWallpaper(currentUserId);
+        
+        for (Wallpaper wp : daftarWallpaper) {
+            WallpaperCard card = new WallpaperCard(wp,this); 
+            jPanelHomeGallery.add(card);
+        }
+        
+        JPanel wrapper = new JPanel(new BorderLayout());        
+        wrapper.setBackground(jPanelHomeGallery.getBackground());
+        wrapper.add(jPanelHomeGallery, BorderLayout.NORTH);
+        
+        jScrollPanePublicWallpaperGallery.setViewportView(wrapper);
+        
+        jPanelHomeGallery.revalidate();
+        jPanelHomeGallery.repaint(); 
+        
+        jLabelTotalWallpaperHomePage.setText("Total Images : " +  GalleryProvider.countWallpaper(daftarWallpaper));
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -66,9 +179,15 @@ public class HomeFrame extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new HomeFrame().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new HomeFrame(false,0,"").setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabelProfileIcon;
+    private javax.swing.JLabel jLabelTotalWallpaperHomePage;
+    private javax.swing.JLabel jLabelUsernameHomePage;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanelHomeGallery;
+    private javax.swing.JScrollPane jScrollPanePublicWallpaperGallery;
     // End of variables declaration//GEN-END:variables
 }

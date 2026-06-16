@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package models;
+import interfaces.GalleryProvider;
 import database.DBConnection;
 import java.sql.*;
 import java.util.ArrayList;
@@ -13,10 +14,13 @@ import java.util.List;
  */
 public class WallpaperPublic extends Wallpaper implements GalleryProvider{
     
-    public WallpaperPublic() {
-     super();
+    public WallpaperPublic() {super();}
+    
+    public WallpaperPublic(int id, String title, String category, String imagePath, String description, int userId,String timeAdded) {
+     super(id, title, category, imagePath, description,userId,timeAdded);
     }
     
+    @Override
     public List<Wallpaper> getGalleryWallpaper(int userId) {
         List<Wallpaper> list = new ArrayList<>();
         
@@ -28,22 +32,40 @@ public class WallpaperPublic extends Wallpaper implements GalleryProvider{
            ResultSet rs = pstmt.executeQuery();
           
                 while (rs.next()) {
-                    Wallpaper wp = new Wallpaper();
-                    wp.setId(rs.getInt("id"));
-                    wp.setTitle(rs.getString("title"));
-                    wp.setDescription(rs.getString("description"));
-                    wp.setCategory(rs.getString("category"));
-                    wp.setImagePath(rs.getString("image_path"));
-                    wp.setUserId(rs.getInt("user_id"));
-                    wp.setTimeAdded(rs.getString("created_at"));
+                    Wallpaper wp = new WallpaperPublic(
+                        rs.getInt("id"),
+                        rs.getString("title"),
+                        rs.getString("category"),
+                        rs.getString("image_path"),
+                        rs.getString("description"),
+                        rs.getInt("user_id"),
+                        rs.getString("created_at")
+                    );
                     list.add(wp);
                 }
                 
         } catch (SQLException e) {
             e.printStackTrace();
+        }        
+        return list;       
+    } 
+    
+    public static String getUsernameById(int userId) {
+        String username = "Unknown";
+        String query = "SELECT username FROM users WHERE id = ?";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, userId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    username = rs.getString("username");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        
-        return list;
-        
-    }  
+        return username;
+    }
 }

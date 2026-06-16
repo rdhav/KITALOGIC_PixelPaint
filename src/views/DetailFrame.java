@@ -29,9 +29,9 @@ public class DetailFrame extends javax.swing.JFrame {
      * Creates new form DetailFrame
      */
     
-   final private Wallpaper wallpaperInfo;
-   final private String currentUsername;
-   final private JFrame mainFrame;
+   private final Wallpaper wallpaperInfo;
+   private final String currentUsername;
+   private final JFrame mainFrame;
     
     public DetailFrame(Wallpaper wp,  int currentUserId, String currentUsername, JFrame mainFrame, File fileGambar) {
         this.wallpaperInfo = wp;
@@ -50,9 +50,7 @@ public class DetailFrame extends javax.swing.JFrame {
         }
 
         showWallpaperDetail(fileGambar);
-    }
-    
-    
+    } 
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -171,29 +169,35 @@ public class DetailFrame extends javax.swing.JFrame {
     private void jButtonDownloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDownloadActionPerformed
         // TODO add your handling code here:
         if (this.wallpaperInfo == null || this.wallpaperInfo.getImagePath() == null) {
-        JOptionPane.showMessageDialog(this, "Data gambar tidak valid!", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Data gambar tidak valid! tidak ada di database", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        File sourceFile = new File("src/uploads/" + this.wallpaperInfo.getImagePath());
+            
+        if (!sourceFile.exists()) {
+        JOptionPane.showMessageDialog(this, """
+            Gagal mendownload! File asli tidak ditemukan di folder: "src/uploads/"
+            Kemungkinan file telah terhapus atau dipindahkan secara manual.""", 
+            "File Tidak Ditemukan", 
+            JOptionPane.ERROR_MESSAGE);
         return;
-        }   
-
+        }
+        
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Pilih Lokasi Simpan Wallpaper");
-
-        String namaFileBersih = this.wallpaperInfo.getTitle().replaceAll("[^a-zA-Z0-9]", "_") + ".png";
+        String namaFileBersih = this.wallpaperInfo.getTitle().replaceAll("[^a-zA-Z0-9]", "_") + ".jpg";
         fileChooser.setSelectedFile(new File(namaFileBersih));
-
+        fileChooser.setDialogTitle("Pilih Lokasi Simpan Wallpaper");
+      
+        File fileTujuan = fileChooser.getSelectedFile();
+        
         int pilihanUser = fileChooser.showSaveDialog(this);
-
+        
         if (pilihanUser == JFileChooser.APPROVE_OPTION) {
-            File fileTujuan = fileChooser.getSelectedFile();
-            String pathResource = "/uploads/" + this.wallpaperInfo.getImagePath(); 
-
-            try (InputStream input = getClass().getResourceAsStream(pathResource)) {
+           
+            try {
                 
-                if (input == null) {
-                    throw new FileNotFoundException("File Wallpaper asli tidak ditemukan di dalam sistem!");
-                }
-
-                Files.copy(input, fileTujuan.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                Files.copy(sourceFile.toPath(), fileTujuan.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
                 JOptionPane.showMessageDialog(this, "Wallpaper berhasil diunduh!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
 
@@ -235,8 +239,7 @@ public class DetailFrame extends javax.swing.JFrame {
                     imageFilePath.delete();
                 } else {    
                     System.out.println("File fisik tidak ditemukan di folder uploads, hanya membersihkan data database.");
-                }
-                
+                }                
                 
                 JOptionPane.showMessageDialog(this, "Wallpaper berhasil dihapus");
                 
@@ -284,7 +287,7 @@ public class DetailFrame extends javax.swing.JFrame {
                         
                     } else {
                         
-                        ImageIcon defaultlIcon = new ImageIcon("uploads/default.jpg");
+                        ImageIcon defaultlIcon = new ImageIcon("src/uploads/default.jpg");
                         
                         Image scaledImage = defaultlIcon.getImage().getScaledInstance(lebar, panjang, Image.SCALE_SMOOTH);
 

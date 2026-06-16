@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package views;
+import components.WallpaperCard;
 import java.sql.*;
 import database.DBConnection;
 import javax.swing.JOptionPane;
@@ -12,7 +13,7 @@ import java.nio.file.Files;
 import java.io.IOException; 
 import java.util.List;
 import javax.swing.JFileChooser;
-import models.GalleryProvider;
+import interfaces.GalleryProvider;
 import models.Wallpaper;
 import javax.swing.JPanel;
 import java.awt.*;
@@ -29,23 +30,22 @@ public class ProfileFrame extends javax.swing.JFrame {
     /**
      * Creates new form ProfileFrame
      */
+    private boolean isLogin = false;   
     private final int currentUserId; 
     private final String currentUsername;
     
     public ProfileFrame(int userId, String username, String bio) {
         this.currentUserId = userId; 
         this.currentUsername = username;
+        
+        if (currentUserId > 0) {
+        isLogin = true;
+        }
     
         initComponents(); 
-      
+               
+        showGalleryWallpaperUser();   
         
-        JPanel wrapper = new JPanel(new BorderLayout());
-        
-        wrapper.setBackground(jPanel1.getBackground());
-        wrapper.add(jPanel1, BorderLayout.NORTH);
-        jScrollPaneWallpaperGallery.setViewportView(wrapper);
-        
-        showGalleryWallpaperUser();       
         jLabelName.setText(username);
         jLabelBio.setText(bio);       
     }
@@ -64,8 +64,10 @@ public class ProfileFrame extends javax.swing.JFrame {
         jLabelName = new javax.swing.JLabel();
         jLabelBio = new javax.swing.JLabel();
         jButtonUploadImage = new javax.swing.JButton();
-        jScrollPaneWallpaperGallery = new javax.swing.JScrollPane();
-        jPanel1 = new javax.swing.JPanel();
+        jLabelJumlahWallpaper = new javax.swing.JLabel();
+        jLabelTitle = new javax.swing.JLabel();
+        jScrollPanePrivateWallpaperGallery = new javax.swing.JScrollPane();
+        jPanelProfileGallery = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Profile Page");
@@ -83,45 +85,65 @@ public class ProfileFrame extends javax.swing.JFrame {
         jButtonUploadImage.setText("Upload");
         jButtonUploadImage.addActionListener(this::jButtonUploadImageActionPerformed);
 
+        jLabelJumlahWallpaper.setText("Jumlah wallpaper");
+
+        jLabelTitle.setFont(new java.awt.Font("Tw Cen MT", 1, 18)); // NOI18N
+        jLabelTitle.setForeground(new java.awt.Color(204, 0, 0));
+        jLabelTitle.setText("PIXEL PAINT");
+        jLabelTitle.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabelTitle.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jLabelTitle.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabelTitleMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelProfileInfoLayout = new javax.swing.GroupLayout(jPanelProfileInfo);
         jPanelProfileInfo.setLayout(jPanelProfileInfoLayout);
         jPanelProfileInfoLayout.setHorizontalGroup(
             jPanelProfileInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelProfileInfoLayout.createSequentialGroup()
-                .addGap(12, 12, 12)
+                .addContainerGap()
                 .addGroup(jPanelProfileInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabelBio, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanelProfileInfoLayout.createSequentialGroup()
+                        .addComponent(jButtonUploadImage)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabelJumlahWallpaper))
+                    .addGroup(jPanelProfileInfoLayout.createSequentialGroup()
+                        .addComponent(jLabelBio, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanelProfileInfoLayout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabelName, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 772, Short.MAX_VALUE)
-                .addComponent(jButtonUploadImage)
-                .addGap(30, 30, 30))
+                        .addComponent(jLabelName, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 755, Short.MAX_VALUE)
+                        .addComponent(jLabelTitle)))
+                .addContainerGap())
         );
         jPanelProfileInfoLayout.setVerticalGroup(
             jPanelProfileInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelProfileInfoLayout.createSequentialGroup()
-                .addGap(25, 25, 25)
+                .addContainerGap()
                 .addGroup(jPanelProfileInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabelName))
+                    .addComponent(jLabel1)
+                    .addComponent(jLabelName)
+                    .addComponent(jLabelTitle))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabelBio, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(19, 19, 19))
-            .addGroup(jPanelProfileInfoLayout.createSequentialGroup()
-                .addGap(42, 42, 42)
-                .addComponent(jButtonUploadImage)
+                .addComponent(jLabelBio, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanelProfileInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonUploadImage)
+                    .addComponent(jLabelJumlahWallpaper))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanelProfileInfo, java.awt.BorderLayout.NORTH);
 
-        jPanel1.setBackground(new java.awt.Color(204, 204, 204));
-        jPanel1.setLayout(new java.awt.GridLayout(1, 0));
-        jScrollPaneWallpaperGallery.setViewportView(jPanel1);
+        jPanelProfileGallery.setBackground(new java.awt.Color(204, 204, 204));
+        jPanelProfileGallery.setLayout(new java.awt.GridLayout(1, 0));
+        jScrollPanePrivateWallpaperGallery.setViewportView(jPanelProfileGallery);
 
-        getContentPane().add(jScrollPaneWallpaperGallery, java.awt.BorderLayout.CENTER);
+        getContentPane().add(jScrollPanePrivateWallpaperGallery, java.awt.BorderLayout.CENTER);
 
         pack();
         setLocationRelativeTo(null);
@@ -151,7 +173,7 @@ public class ProfileFrame extends javax.swing.JFrame {
 
         try {
             String title = JOptionPane.showInputDialog(this, "Masukkan Judul Wallpaper:");
-            String description = JOptionPane.showInputDialog(this, "Masukkan Deskripsi:");
+            String description = JOptionPane.showInputDialog(this, "(Boleh di skip!)Masukkan Deskripsi:");
             String category = JOptionPane.showInputDialog(this, "Masukkan Kategori :");
 
             if (title == null || category == null) {
@@ -182,25 +204,39 @@ public class ProfileFrame extends javax.swing.JFrame {
         }   
     }//GEN-LAST:event_jButtonUploadImageActionPerformed
 
+    private void jLabelTitleMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelTitleMouseClicked
+        // TODO add your handling code here:
+        this.dispose();
+        
+        HomeFrame homeFrame = new HomeFrame(isLogin,currentUserId,currentUsername);
+        homeFrame.setVisible(true);
+    }//GEN-LAST:event_jLabelTitleMouseClicked
+
     public void showGalleryWallpaperUser() {
+        jPanelProfileGallery.removeAll();
+        jPanelProfileGallery.setLayout(new java.awt.GridLayout(0, 5, 15, 15));
         
-        jPanel1.removeAll();
-        jPanel1.setLayout(new java.awt.GridLayout(0, 5, 15, 15));
-        
-        //wallpaper private atau public
+        //wallpaper private
         GalleryProvider gallery = new WallpaperPrivate();
         
         List<Wallpaper> daftarWallpaper = gallery.getGalleryWallpaper(currentUserId);
 
         for (Wallpaper wp : daftarWallpaper) {
-            WallpaperCard card = new WallpaperCard(wp, currentUserId ,currentUsername, this);
-            jPanel1.add(card);
+            WallpaperCard card = new WallpaperCard(wp, currentUserId ,currentUsername, this); 
+            jPanelProfileGallery.add(card);
         }
-
-        jPanel1.revalidate();
-        jPanel1.repaint();
-    }
-    
+        
+        JPanel wrapper = new JPanel(new BorderLayout());        
+        wrapper.setBackground(jPanelProfileGallery.getBackground());
+        wrapper.add(jPanelProfileGallery, BorderLayout.NORTH);
+        
+        jScrollPanePrivateWallpaperGallery.setViewportView(wrapper);
+        
+        jPanelProfileGallery.revalidate();
+        jPanelProfileGallery.repaint();        
+      
+        jLabelJumlahWallpaper.setText("Total Images : " +  GalleryProvider.countWallpaper(daftarWallpaper));
+    }    
     
     /**
      * @param args the command line arguments
@@ -224,16 +260,18 @@ public class ProfileFrame extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new ProfileFrame(2,"Alvin","coba").setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new ProfileFrame(2,"vin_art","Test").setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonUploadImage;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabelBio;
+    private javax.swing.JLabel jLabelJumlahWallpaper;
     private javax.swing.JLabel jLabelName;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel jLabelTitle;
+    private javax.swing.JPanel jPanelProfileGallery;
     private javax.swing.JPanel jPanelProfileInfo;
-    private javax.swing.JScrollPane jScrollPaneWallpaperGallery;
+    private javax.swing.JScrollPane jScrollPanePrivateWallpaperGallery;
     // End of variables declaration//GEN-END:variables
 }

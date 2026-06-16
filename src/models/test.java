@@ -18,5 +18,7 @@ public class test {
         } else {
             System.out.println("Koneksi gagal!");
         }
+        
+        System.out.print(System.currentTimeMillis());
     }
 }
