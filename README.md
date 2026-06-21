@@ -41,6 +41,8 @@ Aplikasi berbasis Java memungkinkan pengguna untuk menemukan, mengunduh, dan mem
 - `src/database`
 - `src/images`
 - `src/uploads`
+- `src/components`
+- `src/lib`
 
 ---
 
