@@ -82,7 +82,7 @@
                           <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace pref="442" max="32767" attributes="0"/>
+                  <EmptySpace pref="439" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="homeBtn" alignment="1" min="-2" pref="110" max="-2" attributes="0"/>
                       <Component id="logoutBtn" alignment="1" min="-2" pref="110" max="-2" attributes="0"/>
@@ -304,7 +304,6 @@
                           <Component id="editBtn" min="-2" pref="34" max="-2" attributes="0"/>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Component id="editErrorLabel" min="-2" pref="25" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
@@ -317,9 +316,9 @@
                               <Component id="jCheckBox1" max="32767" attributes="0"/>
                               <Component id="jPanel4" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>

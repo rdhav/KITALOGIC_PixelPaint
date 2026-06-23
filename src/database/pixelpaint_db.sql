@@ -45,17 +45,11 @@ INSERT INTO artworks
 (id, title, description, category, image_path, user_id, created_at)
 VALUES
 (1, 'Sunset Over Mountains', 'Lukisan digital pemandangan matahari terbenam', 'Landscape', '2_1781556972811_sunset.jpg', 2, '2026-06-12 10:12:05'),
-
 (2, 'Abstract Blue', 'Karya abstrak dengan dominasi warna biru', 'Abstract', '2_1781556972811_abstract_blue.jpg', 2, '2026-06-12 10:12:05'),
-
 (3, 'City at Night', 'Ilustrasi kota malam hari dengan lampu neon', 'Illustration', '3_1781556972811_city_night.jpg', 3, '2026-06-12 10:12:05'),
-
 (4, 'Forest Path', 'Jalan setapak di tengah hutan lebat', 'Landscape', '3_1781556972811_forest.jpg', 3, '2026-06-12 10:12:05'),
-
 (5, 'Pixel Cat', 'Kucing lucu dalam gaya pixel art', 'Pixel Art', '4_1781556972811_pixel_cat.jpg', 4, '2026-06-12 10:12:05'),
-
-(6, 'Retro Space', 'Tema luar angkasa bergaya retro 8-bit', 'Pixel Art', '4_1781556972811_retro_space.jpg', 4, '2026-06-12 10:12:05');
-
+(6, 'Retro Space', 'Tema luar angkasa bergaya retro 8-bit', 'Pixel Art', '4_1781556972811_retro_space.png', 4, '2026-06-12 10:12:05');
 -- --------------------------------------------------------
 
 --
