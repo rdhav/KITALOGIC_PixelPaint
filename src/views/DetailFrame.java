@@ -31,11 +31,13 @@ public class DetailFrame extends javax.swing.JFrame {
     
    private final Wallpaper wallpaperInfo;
    private final String currentUsername;
+   private final int currentUserId;  
    private final JFrame mainFrame;
     
     public DetailFrame(Wallpaper wp,  int currentUserId, String currentUsername, JFrame mainFrame, File fileGambar) {
         this.wallpaperInfo = wp;
         this.currentUsername = currentUsername;
+        this.currentUserId = currentUserId;
         this.mainFrame = mainFrame;
         
         //this.setSize(800, 615);
@@ -49,8 +51,30 @@ public class DetailFrame extends javax.swing.JFrame {
             jButtonDelete.setVisible(false); 
         }
 
+        getContentPane().setBackground(new java.awt.Color(255, 255, 255));
         showWallpaperDetail(fileGambar);
     } 
+    
+    private String getUsernameUploader(int userId) {
+        String result = "Unknown";
+        String sql = "SELECT username FROM users WHERE id = ?";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                result = rs.getString("username");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -73,14 +97,17 @@ public class DetailFrame extends javax.swing.JFrame {
         jLabelDescription = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setBackground(new java.awt.Color(255, 255, 255));
         setMaximumSize(new java.awt.Dimension(0, 0));
         setResizable(false);
 
+        jLabelImage.setBackground(new java.awt.Color(255, 255, 255));
+        jLabelImage.setForeground(new java.awt.Color(255, 255, 255));
         jLabelImage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabelImage.setMaximumSize(new java.awt.Dimension(800, 500));
         jLabelImage.setPreferredSize(new java.awt.Dimension(1000, 600));
 
-        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel2.setBackground(new java.awt.Color(41, 41, 41));
         jPanel2.setMaximumSize(new java.awt.Dimension(0, 0));
         jPanel2.setPreferredSize(new java.awt.Dimension(800, 165));
 
@@ -90,16 +117,22 @@ public class DetailFrame extends javax.swing.JFrame {
         jButtonDelete.setText("Delete");
         jButtonDelete.addActionListener(this::jButtonDeleteActionPerformed);
 
+        jLabelImageTitle.setForeground(new java.awt.Color(255, 255, 255));
         jLabelImageTitle.setText("image_nama");
 
+        jLabelUploaderName.setForeground(new java.awt.Color(255, 255, 255));
         jLabelUploaderName.setText("username");
 
+        jLabelCategory.setForeground(new java.awt.Color(255, 255, 255));
         jLabelCategory.setText("category");
 
+        jLabelDate.setForeground(new java.awt.Color(255, 255, 255));
         jLabelDate.setText("date");
 
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Description :");
 
+        jLabelDescription.setForeground(new java.awt.Color(255, 255, 255));
         jLabelDescription.setText("description text");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -155,8 +188,8 @@ public class DetailFrame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabelImage, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabelImage, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -275,7 +308,7 @@ public class DetailFrame extends javax.swing.JFrame {
         if (wallpaperInfo != null) {
             
             jLabelImageTitle.setText(wallpaperInfo.getTitle());
-            jLabelUploaderName.setText("Uploaded By: " + currentUsername);
+            jLabelUploaderName.setText("Uploaded By: " + getUsernameUploader(wallpaperInfo.getUserId()));
             jLabelCategory.setText(wallpaperInfo.getCategory());         
             jLabelDescription.setText(wallpaperInfo.getDescription());
             jLabelDate.setText("Created At: " + wallpaperInfo.getTimeAdded().substring(0,wallpaperInfo.getTimeAdded().indexOf(' ')));

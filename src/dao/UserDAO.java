@@ -66,4 +66,76 @@ public class UserDAO {
             return false;
         }
     }
+    
+    public boolean updateProfile(int userId, String newUsername, String newPassword, String newBio) {
+        String checkSql = "SELECT id FROM users WHERE username = ? AND id != ?";
+
+        try (Connection conn = DBConnection.getConnection()) {
+            PreparedStatement checkPs = conn.prepareStatement(checkSql);
+            checkPs.setString(1, newUsername);
+            checkPs.setInt(2, userId);
+            ResultSet rs = checkPs.executeQuery();
+
+            if (rs.next()) {
+                return false; 
+            }
+
+            String updateSql;
+            PreparedStatement updatePs;
+
+            if (newPassword.isEmpty()) {
+                updateSql = "UPDATE users SET username = ?, bio = ? WHERE id = ?";
+                updatePs = conn.prepareStatement(updateSql);
+                updatePs.setString(1, newUsername);
+                updatePs.setString(2, newBio);
+                updatePs.setInt(3, userId);
+            } else {
+                updateSql = "UPDATE users SET username = ?, password = ?, bio = ? WHERE id = ?";
+                updatePs = conn.prepareStatement(updateSql);
+                updatePs.setString(1, newUsername);
+                updatePs.setString(2, newPassword);
+                updatePs.setString(3, newBio);
+                updatePs.setInt(4, userId);
+            }
+
+            updatePs.executeUpdate();
+            return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    public User getUserById(int userId) {
+        String sql = "SELECT * FROM users WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                String role = rs.getString("role");
+                if (role.equals("admin")) {
+                    return new models.AdminUser(
+                        rs.getInt("id"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getString("bio")
+                    );
+                } else {
+                    return new models.RegularUser(
+                        rs.getInt("id"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getString("bio")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

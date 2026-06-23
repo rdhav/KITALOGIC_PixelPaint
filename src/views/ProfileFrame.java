@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 import java.awt.*;
 import java.nio.file.StandardCopyOption;
 import models.WallpaperPrivate;
+import dao.UserDAO;
 /**
  *
  * @author Nice
@@ -33,6 +34,9 @@ public class ProfileFrame extends javax.swing.JFrame {
     private boolean isLogin = false;   
     private final int currentUserId; 
     private final String currentUsername;
+    private boolean isEditPanelVisible = false;
+    private models.User currentUser; 
+
     
     public ProfileFrame(int userId, String username, String bio) {
         this.currentUserId = userId; 
@@ -41,39 +45,33 @@ public class ProfileFrame extends javax.swing.JFrame {
         if (currentUserId > 0) {
             isLogin = true;
         }
-
+        
+        dao.UserDAO userDAO = new dao.UserDAO();
+        this.currentUser = userDAO.getUserById(userId);
         initComponents(); 
+        setResizable(false);
+        setLocationRelativeTo(null);
+        editPanel.setVisible(false);
+        editPanel.setPreferredSize(new java.awt.Dimension(0, 0));
+        editPanel.setMinimumSize(new java.awt.Dimension(0, 0));
+        getContentPane().setBackground(new java.awt.Color(41, 41, 41));
+        showGalleryWallpaperUser(); 
+        
 
-        showGalleryWallpaperUser();   
-
-        jLabelName.setText(username);
+        jLabelName.setText(username.toUpperCase());
 
         if (bio == null || bio.isEmpty()) {
-            bio = getBioFromDatabase(userId);
+            bio = (currentUser != null && currentUser.getBio() != null) ? currentUser.getBio() : "";
         }
-        jLabelBio.setText(bio);   
+        
+        jLabelBio.setText(bio);
+        
+        homeBtn.setContentAreaFilled(false);
+        uploadBtn.setContentAreaFilled(false);
     }
     
-    private String getBioFromDatabase(int userId) {
-        String result = "";
-        String sql = "SELECT bio FROM users WHERE id = ?";
 
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
 
-            ps.setInt(1, userId);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                result = rs.getString("bio");
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return result;
-    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -84,162 +82,519 @@ public class ProfileFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanelProfileInfo = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
         jLabelName = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        homeBtn = new javax.swing.JButton();
         jLabelBio = new javax.swing.JLabel();
-        jButtonUploadImage = new javax.swing.JButton();
-        jLabelJumlahWallpaper = new javax.swing.JLabel();
-        jLabelTitle = new javax.swing.JLabel();
+        logoutBtn = new javax.swing.JButton();
+        editPanel = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        jPanel8 = new javax.swing.JPanel();
+        editBioField = new javax.swing.JTextArea();
+        jLabel11 = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        editPasswordField = new javax.swing.JPasswordField();
+        jPanel1 = new javax.swing.JPanel();
+        editUsernameField = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jCheckBox1 = new javax.swing.JCheckBox();
+        editBtn = new javax.swing.JButton();
+        editErrorLabel = new javax.swing.JLabel();
         jScrollPanePrivateWallpaperGallery = new javax.swing.JScrollPane();
         jPanelProfileGallery = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel12 = new javax.swing.JLabel();
+        jLabelBio1 = new javax.swing.JLabel();
+        uploadBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Profile Page");
-        setPreferredSize(new java.awt.Dimension(1080, 660));
+        setPreferredSize(new java.awt.Dimension(1080, 700));
+        setResizable(false);
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel1.setText("WELCOME");
+        jPanel3.setBackground(new java.awt.Color(41, 41, 41));
+        jPanel3.setPreferredSize(new java.awt.Dimension(1080, 120));
 
-        jLabelName.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabelName.setText("name");
-
-        jLabelBio.setText("bio");
-        jLabelBio.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-
-        jButtonUploadImage.setText("Upload");
-        jButtonUploadImage.addActionListener(this::jButtonUploadImageActionPerformed);
-
-        jLabelJumlahWallpaper.setText("Jumlah wallpaper");
-
-        jLabelTitle.setFont(new java.awt.Font("Tw Cen MT", 1, 18)); // NOI18N
-        jLabelTitle.setForeground(new java.awt.Color(204, 0, 0));
-        jLabelTitle.setText("PIXEL PAINT");
-        jLabelTitle.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jLabelTitle.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jLabelTitle.addMouseListener(new java.awt.event.MouseAdapter() {
+        jLabelName.setBackground(new java.awt.Color(255, 255, 255));
+        jLabelName.setFont(new java.awt.Font("Segoe UI Black", 1, 14)); // NOI18N
+        jLabelName.setForeground(new java.awt.Color(255, 255, 255));
+        jLabelName.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/edit_icon.png"))); // NOI18N
+        jLabelName.setText("  USER!");
+        jLabelName.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabelName.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabelTitleMouseClicked(evt);
+                jLabelNameMouseClicked(evt);
             }
         });
 
-        javax.swing.GroupLayout jPanelProfileInfoLayout = new javax.swing.GroupLayout(jPanelProfileInfo);
-        jPanelProfileInfo.setLayout(jPanelProfileInfoLayout);
-        jPanelProfileInfoLayout.setHorizontalGroup(
-            jPanelProfileInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelProfileInfoLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanelProfileInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanelProfileInfoLayout.createSequentialGroup()
-                        .addComponent(jButtonUploadImage)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabelJumlahWallpaper))
-                    .addGroup(jPanelProfileInfoLayout.createSequentialGroup()
-                        .addComponent(jLabelBio, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanelProfileInfoLayout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabelName, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 755, Short.MAX_VALUE)
-                        .addComponent(jLabelTitle)))
-                .addContainerGap())
+        jLabel8.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel8.setText("Welcome! Find ideas you’ll love.");
+
+        jLabel9.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel9.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(204, 204, 204));
+        jLabel9.setText("Discover ideas, save inspiration, and bring your imagination.");
+
+        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/logoPixelPaint.png"))); // NOI18N
+
+        homeBtn.setBackground(new java.awt.Color(0, 0, 0));
+        homeBtn.setFont(new java.awt.Font("Segoe UI Black", 0, 14)); // NOI18N
+        homeBtn.setForeground(new java.awt.Color(255, 255, 255));
+        homeBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/home.png"))); // NOI18N
+        homeBtn.setText(" Home");
+        homeBtn.setAlignmentY(0.0F);
+        homeBtn.setBorder(null);
+        homeBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        homeBtn.addActionListener(this::homeBtnActionPerformed);
+
+        jLabelBio.setBackground(new java.awt.Color(255, 255, 255));
+        jLabelBio.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
+        jLabelBio.setForeground(new java.awt.Color(204, 204, 204));
+        jLabelBio.setText("Discover ideas, save inspiration, and bring your imagination.");
+
+        logoutBtn.setBackground(new java.awt.Color(255, 51, 0));
+        logoutBtn.setFont(new java.awt.Font("Segoe UI Black", 0, 14)); // NOI18N
+        logoutBtn.setForeground(new java.awt.Color(255, 255, 255));
+        logoutBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lgin_con.png"))); // NOI18N
+        logoutBtn.setText("Logout");
+        logoutBtn.setAlignmentY(0.0F);
+        logoutBtn.setBorder(null);
+        logoutBtn.setBorderPainted(false);
+        logoutBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        logoutBtn.addActionListener(this::logoutBtnActionPerformed);
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(31, 31, 31)
+                .addComponent(jLabel10)
+                .addGap(26, 26, 26)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel8)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 4, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabelName)
+                            .addComponent(jLabel9)
+                            .addComponent(jLabelBio))
+                        .addGap(22, 22, 22)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 442, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(homeBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(logoutBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(35, 35, 35))
         );
-        jPanelProfileInfoLayout.setVerticalGroup(
-            jPanelProfileInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelProfileInfoLayout.createSequentialGroup()
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addGap(71, 71, 71)
+                .addComponent(jLabel10)
+                .addContainerGap(45, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addGap(39, 39, 39)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                                .addComponent(jLabel8)
+                                .addGap(21, 21, 21)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabelName, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabelBio))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(homeBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(logoutBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(22, 22, 22))
+        );
+
+        editPanel.setBackground(new java.awt.Color(41, 41, 41));
+
+        jLabel4.setBackground(new java.awt.Color(153, 153, 153));
+        jLabel4.setFont(new java.awt.Font("Microsoft YaHei Light", 1, 14)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/bio_icon.png"))); // NOI18N
+        jLabel4.setText("Bio");
+        jLabel4.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+
+        jPanel8.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel8.setForeground(new java.awt.Color(255, 255, 255));
+
+        editBioField.setColumns(20);
+        editBioField.setRows(5);
+        editBioField.setBorder(null);
+        editBioField.setDisabledTextColor(new java.awt.Color(255, 255, 255));
+
+        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        jPanel8.setLayout(jPanel8Layout);
+        jPanel8Layout.setHorizontalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addGap(0, 7, Short.MAX_VALUE)
+                .addComponent(editBioField, javax.swing.GroupLayout.PREFERRED_SIZE, 368, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 7, Short.MAX_VALUE))
+        );
+        jPanel8Layout.setVerticalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanelProfileInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabelName)
-                    .addComponent(jLabelTitle))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabelBio, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(jPanelProfileInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonUploadImage)
-                    .addComponent(jLabelJumlahWallpaper))
+                .addComponent(editBioField, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        getContentPane().add(jPanelProfileInfo, java.awt.BorderLayout.NORTH);
+        jLabel11.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel11.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel11.setText("Profile Settings");
 
-        jPanelProfileGallery.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel4.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 255), 1, true));
+        jPanel4.setForeground(new java.awt.Color(255, 255, 255));
+
+        editPasswordField.setBorder(null);
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(editPasswordField, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(editPasswordField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
+        );
+
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 255), 1, true));
+        jPanel1.setForeground(new java.awt.Color(255, 255, 255));
+
+        editUsernameField.setFont(new java.awt.Font("Microsoft YaHei", 0, 12)); // NOI18N
+        editUsernameField.setBorder(null);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(editUsernameField)
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(editUsernameField, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
+        );
+
+        jLabel1.setBackground(new java.awt.Color(153, 153, 153));
+        jLabel1.setFont(new java.awt.Font("Microsoft YaHei Light", 1, 14)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/username_icon.png"))); // NOI18N
+        jLabel1.setText("Username");
+        jLabel1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+
+        jLabel3.setBackground(new java.awt.Color(153, 153, 153));
+        jLabel3.setFont(new java.awt.Font("Microsoft YaHei Light", 1, 14)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/pw_icon.png"))); // NOI18N
+        jLabel3.setText("Password");
+
+        jCheckBox1.addActionListener(this::jCheckBox1ActionPerformed);
+
+        editBtn.setBackground(new java.awt.Color(0, 0, 255));
+        editBtn.setFont(new java.awt.Font("Microsoft Tai Le", 1, 14)); // NOI18N
+        editBtn.setForeground(new java.awt.Color(255, 255, 255));
+        editBtn.setText("Save!");
+        editBtn.setBorder(null);
+        editBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        editBtn.addActionListener(this::editBtnActionPerformed);
+
+        editErrorLabel.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        editErrorLabel.setForeground(new java.awt.Color(255, 0, 0));
+
+        javax.swing.GroupLayout editPanelLayout = new javax.swing.GroupLayout(editPanel);
+        editPanel.setLayout(editPanelLayout);
+        editPanelLayout.setHorizontalGroup(
+            editPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(editPanelLayout.createSequentialGroup()
+                .addGap(29, 29, 29)
+                .addGroup(editPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel11)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(editPanelLayout.createSequentialGroup()
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jCheckBox1, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(editPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel4)
+                    .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(editBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(editErrorLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(130, 130, 130))
+        );
+        editPanelLayout.setVerticalGroup(
+            editPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(editPanelLayout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addComponent(jLabel11)
+                .addGap(26, 26, 26)
+                .addGroup(editPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(editPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addGap(18, 18, 18)
+                        .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(editBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(editErrorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(editPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel3)
+                        .addGap(18, 18, 18)
+                        .addGroup(editPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jCheckBox1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+        );
+
+        jScrollPanePrivateWallpaperGallery.setBorder(null);
+
+        jPanelProfileGallery.setBackground(new java.awt.Color(41, 41, 41));
         jPanelProfileGallery.setLayout(new java.awt.GridLayout(1, 0));
         jScrollPanePrivateWallpaperGallery.setViewportView(jPanelProfileGallery);
 
-        getContentPane().add(jScrollPanePrivateWallpaperGallery, java.awt.BorderLayout.CENTER);
+        jPanel2.setBackground(new java.awt.Color(41, 41, 41));
+
+        jLabel12.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel12.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel12.setText("Inspiration Board");
+
+        jLabelBio1.setBackground(new java.awt.Color(255, 255, 255));
+        jLabelBio1.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
+        jLabelBio1.setForeground(new java.awt.Color(204, 204, 204));
+        jLabelBio1.setText("Your space for inspiration.");
+
+        uploadBtn.setBackground(new java.awt.Color(0, 0, 0));
+        uploadBtn.setFont(new java.awt.Font("Segoe UI Black", 0, 14)); // NOI18N
+        uploadBtn.setForeground(new java.awt.Color(255, 255, 255));
+        uploadBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/unggah.png"))); // NOI18N
+        uploadBtn.setText(" Uploads");
+        uploadBtn.setAlignmentY(0.0F);
+        uploadBtn.setBorder(null);
+        uploadBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        uploadBtn.addActionListener(this::uploadBtnActionPerformed);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(37, 37, 37)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel12)
+                    .addComponent(jLabelBio1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(uploadBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(36, 36, 36))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(27, 27, 27)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(uploadBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel12)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabelBio1)))
+                .addContainerGap(27, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(jScrollPanePrivateWallpaperGallery)
+            .addComponent(editPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(editPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPanePrivateWallpaperGallery, javax.swing.GroupLayout.PREFERRED_SIZE, 443, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButtonUploadImageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonUploadImageActionPerformed
-        // TODO add your handling code here: 
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setFileFilter(new FileNameExtensionFilter("Image Files", "jpg", "png", "jpeg"));
-        int result = fileChooser.showOpenDialog(this); 
+    private void homeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeBtnActionPerformed
+        // TODO add your handling code here:
+        new HomeFrame(true, currentUserId, currentUsername).setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_homeBtnActionPerformed
 
-        if (result != JFileChooser.APPROVE_OPTION) {
+    private void jLabelNameMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelNameMouseClicked
+        // TODO add your handling code here:
+        isEditPanelVisible = !isEditPanelVisible;
+        editPanel.setVisible(isEditPanelVisible);
+
+        System.out.println("Edit panel visible: " + isEditPanelVisible);
+        System.out.println("Panel size: " + editPanel.getSize());
+
+        if (isEditPanelVisible) {
+            editPanel.setPreferredSize(null);
+            editPanel.setMinimumSize(null);
+
+            editUsernameField.setText(currentUser.getUsername());
+            editBioField.setText(currentUser.getBio());
+            editPasswordField.setText(currentUser.getPassword());
+            editPasswordField.setEchoChar('\u25CF');
+            editErrorLabel.setText("");
+            jCheckBox1.setSelected(false);
+            
+            setSize(1080, 900);
+            setLocationRelativeTo(null);
+        }else{
+            editPanel.setPreferredSize(new java.awt.Dimension(0, 0)); 
+            editPanel.setMinimumSize(new java.awt.Dimension(0, 0));
+            
+            setSize(1080, 700);
+            setLocationRelativeTo(null);
+        }
+        getContentPane().revalidate(); 
+        getContentPane().repaint();
+    }//GEN-LAST:event_jLabelNameMouseClicked
+
+    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+        // TODO add your handling code here:
+        if (jCheckBox1.isSelected()) {
+            editPasswordField.setEchoChar((char) 0); // tampilkan
+        } else {
+            editPasswordField.setEchoChar('\u25CF'); // sembunyikan
+        }
+    }//GEN-LAST:event_jCheckBox1ActionPerformed
+
+    private void editBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBtnActionPerformed
+        // TODO add your handling code here:
+        String newUsername = editUsernameField.getText().trim();
+        String newPassword = new String(editPasswordField.getPassword()).trim();
+        String newBio = editBioField.getText().trim();
+
+        if (newUsername.isEmpty()) {
+            editErrorLabel.setText("* Username tidak boleh kosong!");
+            editErrorLabel.setForeground(java.awt.Color.RED);
             return;
         }
 
-        File sourceFile = fileChooser.getSelectedFile();
-        File targetDirectory = new File("src/uploads"); 
+        UserDAO userDAO = new UserDAO();
+        boolean success = userDAO.updateProfile(currentUserId, newUsername, newPassword, newBio);
 
-        if (!targetDirectory.exists()) {
-            targetDirectory.mkdirs(); 
+        if (success) {
+            editErrorLabel.setText("Profil berhasil diperbarui!");
+            editErrorLabel.setForeground(new java.awt.Color(0, 153, 0));
+            isEditPanelVisible = false;
+            editPanel.setVisible(false);
+            editPanel.setPreferredSize(new java.awt.Dimension(0, 0));
+            editPanel.setMinimumSize(new java.awt.Dimension(0, 0));
+
+            setSize(1080, 700);        
+            setLocationRelativeTo(null);
+            getContentPane().revalidate();
+            getContentPane().repaint();
+
+            jLabelName.setText(newUsername);
+
+            isEditPanelVisible = false;
+            editPanel.setVisible(false);
+        } else {
+            editErrorLabel.setText("* Username sudah dipakai!");
+            editErrorLabel.setForeground(java.awt.Color.RED);
         }
+    }//GEN-LAST:event_editBtnActionPerformed
 
+    private void uploadBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uploadBtnActionPerformed
+        // TODO add your handling code here:
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileFilter(new FileNameExtensionFilter("Image Files", "jpg", "png", "jpeg"));
+        int result = fileChooser.showOpenDialog(this);
+        if (result != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+        File sourceFile = fileChooser.getSelectedFile();
+        File targetDirectory = new File("src/uploads");
+        if (!targetDirectory.exists()) {
+            targetDirectory.mkdirs();
+        }
         long timestamp = System.currentTimeMillis();
         String changedFileName = sourceFile.getName().replace(" ", "_");
         String uniqueFileName = currentUserId + "_" + timestamp + "_" + changedFileName;
         File destinationFile = new File(targetDirectory, uniqueFileName);
-
         try {
             String title = JOptionPane.showInputDialog(this, "Masukkan Judul Wallpaper:");
             String description = JOptionPane.showInputDialog(this, "(Boleh di skip!)Masukkan Deskripsi:");
             String category = JOptionPane.showInputDialog(this, "Masukkan Kategori :");
-
             if (title == null || category == null) {
                 JOptionPane.showMessageDialog(this, "Wallpaper harus diberikan title dan Category!!");
                 return;
             }
-
             // Proses copy file secara langsung ke folder uploads
             Files.copy(sourceFile.toPath(), destinationFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
             String insertQuerySQL = "INSERT INTO artworks (title, description, category, image_path, user_id) VALUES (?, ?, ?, ?, ?)";
             try (Connection con = DBConnection.getConnection();
                 PreparedStatement AddWallapaperPstmt = con.prepareStatement(insertQuerySQL)) {
-
                 AddWallapaperPstmt.setString(1, title);
                 AddWallapaperPstmt.setString(2, description);
                 AddWallapaperPstmt.setString(3, category);
-                AddWallapaperPstmt.setString(4, uniqueFileName); 
+                AddWallapaperPstmt.setString(4, uniqueFileName);
                 AddWallapaperPstmt.setInt(5, currentUserId);
                 AddWallapaperPstmt.executeUpdate();
             }
-
             showGalleryWallpaperUser();
             JOptionPane.showMessageDialog(this, "Wallpaper berhasil diunggah!");
-
         } catch (IOException | SQLException e) {
             JOptionPane.showMessageDialog(this, "Gagal memproses unggahan: " + e.getMessage());
-        }   
-    }//GEN-LAST:event_jButtonUploadImageActionPerformed
+        }
+    }//GEN-LAST:event_uploadBtnActionPerformed
 
-    private void jLabelTitleMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelTitleMouseClicked
+    private void logoutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutBtnActionPerformed
         // TODO add your handling code here:
-        this.dispose();
-        
-        HomeFrame homeFrame = new HomeFrame(isLogin,currentUserId,currentUsername);
-        homeFrame.setVisible(true);
-    }//GEN-LAST:event_jLabelTitleMouseClicked
+    }//GEN-LAST:event_logoutBtnActionPerformed
 
     public void showGalleryWallpaperUser() {
         jPanelProfileGallery.removeAll();
         jPanelProfileGallery.setLayout(new java.awt.GridLayout(0, 5, 15, 15));
+        jPanelProfileGallery.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 30, 50, 15));
         
         //wallpaper private
         GalleryProvider gallery = new WallpaperPrivate();
@@ -260,7 +615,7 @@ public class ProfileFrame extends javax.swing.JFrame {
         jPanelProfileGallery.revalidate();
         jPanelProfileGallery.repaint();        
       
-        jLabelJumlahWallpaper.setText("Total Images : " +  GalleryProvider.countWallpaper(daftarWallpaper));
+//        jLabelJumlahWallpaper.setText("Total Images : " +  GalleryProvider.countWallpaper(daftarWallpaper));
     }    
     
     /**
@@ -289,14 +644,33 @@ public class ProfileFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtonUploadImage;
+    private javax.swing.JTextArea editBioField;
+    private javax.swing.JButton editBtn;
+    private javax.swing.JLabel editErrorLabel;
+    private javax.swing.JPanel editPanel;
+    private javax.swing.JPasswordField editPasswordField;
+    private javax.swing.JTextField editUsernameField;
+    private javax.swing.JButton homeBtn;
+    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel jLabelBio;
-    private javax.swing.JLabel jLabelJumlahWallpaper;
+    private javax.swing.JLabel jLabelBio1;
     private javax.swing.JLabel jLabelName;
-    private javax.swing.JLabel jLabelTitle;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanelProfileGallery;
-    private javax.swing.JPanel jPanelProfileInfo;
     private javax.swing.JScrollPane jScrollPanePrivateWallpaperGallery;
+    private javax.swing.JButton logoutBtn;
+    private javax.swing.JButton uploadBtn;
     // End of variables declaration//GEN-END:variables
 }
