@@ -25,14 +25,12 @@ public class WallpaperCard extends javax.swing.JPanel {
    private final Wallpaper wallpaperInfo;
    private final JFrame mainFrame;
    private final int currentUserId;
-   private final String currentUsername;
-            
+   
    //ketika login
-    public WallpaperCard(Wallpaper wp, int currentUserId, String currentUsername, JFrame mainFrame) {
+    public WallpaperCard(Wallpaper wp, int currentUserId, JFrame mainFrame) {
         
         this.wallpaperInfo = wp;
         this.currentUserId = currentUserId;
-        this.currentUsername = currentUsername;
         this.mainFrame = mainFrame;
                
         initComponents();
@@ -49,7 +47,6 @@ public class WallpaperCard extends javax.swing.JPanel {
         
         this.wallpaperInfo = wp;
         this.currentUserId = -1;
-        this.currentUsername = "Guest";
         this.mainFrame = mainFrame;
                
         initComponents();
@@ -59,8 +56,7 @@ public class WallpaperCard extends javax.swing.JPanel {
         this.setPreferredSize(ukuranTetap);
         this.setMinimumSize(ukuranTetap);
         this.setMaximumSize(ukuranTetap);             
-    }
-    
+    } 
     
     
     /**
@@ -80,16 +76,6 @@ public class WallpaperCard extends javax.swing.JPanel {
         jLabelDate = new javax.swing.JLabel();
 
         setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                formMouseClicked(evt);
-            }
-        });
-        addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                formKeyPressed(evt);
-            }
-        });
         setLayout(new java.awt.BorderLayout());
 
         jLabelImage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -153,21 +139,13 @@ public class WallpaperCard extends javax.swing.JPanel {
         add(jPanelCardInfo, java.awt.BorderLayout.SOUTH);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_formMouseClicked
-
-    private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_formKeyPressed
-
     private void jLabelImageMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelImageMouseClicked
         // TODO add your handling code here:
         try {
             
-            File fileGambar = new File("src/uploads/" + this.wallpaperInfo.getImagePath());
+            File fileImage = new File("src/uploads/" + this.wallpaperInfo.getImagePath());
             
-            DetailFrame detail = new DetailFrame(this.wallpaperInfo, this.currentUserId, this.currentUsername, this.mainFrame, fileGambar);
+            DetailFrame detail = new DetailFrame(this.wallpaperInfo, this.currentUserId, this.mainFrame, fileImage);
             detail.setVisible(true);
             
         } catch (Exception e) {
@@ -181,9 +159,9 @@ public class WallpaperCard extends javax.swing.JPanel {
         // TODO add your handling code here:
         try { 
             
-            File fileGambar = new File("src/uploads/" + this.wallpaperInfo.getImagePath());
+            File fileImage = new File("src/uploads/" + this.wallpaperInfo.getImagePath());
             
-            DetailFrame detail = new DetailFrame(this.wallpaperInfo, this.currentUserId, this.currentUsername, this.mainFrame, fileGambar);
+            DetailFrame detail = new DetailFrame(this.wallpaperInfo, this.currentUserId, this.mainFrame, fileImage);
             detail.setVisible(true);
 
         } catch (Exception e) { 
@@ -205,26 +183,25 @@ public class WallpaperCard extends javax.swing.JPanel {
 
         jLabelImageTitle.setText(wallpaperInfo.getTitle());
         jLabelUploaderName.setText("Uploaded By: " + getUsernameById(wallpaperInfo.getUserId()));
-        jLabelCategory.setText(wallpaperInfo.getCategory());
+        jLabelCategory.setText("Category:" + wallpaperInfo.getCategory());
         jLabelDate.setText("Created At: " + wallpaperInfo.getTimeAdded().substring(0, wallpaperInfo.getTimeAdded().indexOf(' ')));
 
         try {
 
-                File fileGambar = new File("src/uploads/" + this.wallpaperInfo.getImagePath());
-                System.out.println("Mencari file di: " + fileGambar.getAbsolutePath());
-                System.out.println("File ditemukan? " + fileGambar.exists());
-                ImageIcon selectedIcon;
+                File fileImage = new File("src/uploads/" + this.wallpaperInfo.getImagePath());
+                
+                ImageIcon selectedImage;
 
-                if (fileGambar.exists() && this.wallpaperInfo.getImagePath() != null) {
+                if (fileImage.exists() && this.wallpaperInfo.getImagePath() != null) {
 
-                    selectedIcon = new ImageIcon(fileGambar.getAbsolutePath());
+                    selectedImage = new ImageIcon(fileImage.getAbsolutePath());
 
                 } else {
 
-                    selectedIcon = new ImageIcon("src/uploads/default.jpg");
+                    selectedImage = new ImageIcon("src/uploads/default.jpg");
                 }
 
-                Image scaledImage = selectedIcon.getImage().getScaledInstance(lebar, panjang, Image.SCALE_SMOOTH);
+                Image scaledImage = selectedImage.getImage().getScaledInstance(lebar, panjang, Image.SCALE_SMOOTH);
 
                 jLabelImage.setIcon(new ImageIcon(scaledImage));
 

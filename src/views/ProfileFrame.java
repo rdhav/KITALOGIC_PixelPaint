@@ -23,58 +23,33 @@ import models.WallpaperPrivate;
  *
  * @author Nice
  */
-public class ProfileFrame extends javax.swing.JFrame {
+public final class ProfileFrame extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ProfileFrame.class.getName());
 
     /**
      * Creates new form ProfileFrame
      */
-    private boolean isLogin = false;   
+    
     private final int currentUserId; 
     private final String currentUsername;
+    private boolean isUserLoggedIn = false;   
     
     public ProfileFrame(int userId, String username, String bio) {
         this.currentUserId = userId; 
         this.currentUsername = username;
-
+        
         if (currentUserId > 0) {
-            isLogin = true;
+            isUserLoggedIn = true;
         }
 
         initComponents(); 
-
         showGalleryWallpaperUser();   
 
-        jLabelName.setText(username);
-
-        if (bio == null || bio.isEmpty()) {
-            bio = getBioFromDatabase(userId);
-        }
-        jLabelBio.setText(bio);   
+        jLabelName.setText(username);       
+        jLabelBio.setText(bio == null ? "Tidak ada bio" : bio);   
     }
     
-    private String getBioFromDatabase(int userId) {
-        String result = "";
-        String sql = "SELECT bio FROM users WHERE id = ?";
-
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-
-            ps.setInt(1, userId);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                result = rs.getString("bio");
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return result;
-    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -130,20 +105,19 @@ public class ProfileFrame extends javax.swing.JFrame {
             .addGroup(jPanelProfileInfoLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanelProfileInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButtonUploadImage)
                     .addGroup(jPanelProfileInfoLayout.createSequentialGroup()
-                        .addComponent(jButtonUploadImage)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabelJumlahWallpaper))
-                    .addGroup(jPanelProfileInfoLayout.createSequentialGroup()
-                        .addComponent(jLabelBio, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanelProfileInfoLayout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabelName, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 755, Short.MAX_VALUE)
-                        .addComponent(jLabelTitle)))
-                .addContainerGap())
+                        .addGroup(jPanelProfileInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanelProfileInfoLayout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabelName, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabelBio, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(265, 265, 265)
+                        .addGroup(jPanelProfileInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabelJumlahWallpaper)
+                            .addComponent(jLabelTitle))))
+                .addContainerGap(496, Short.MAX_VALUE))
         );
         jPanelProfileInfoLayout.setVerticalGroup(
             jPanelProfileInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -154,11 +128,11 @@ public class ProfileFrame extends javax.swing.JFrame {
                     .addComponent(jLabelName)
                     .addComponent(jLabelTitle))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabelBio, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(jPanelProfileInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonUploadImage)
+                .addGroup(jPanelProfileInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabelBio, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabelJumlahWallpaper))
+                .addGap(18, 18, 18)
+                .addComponent(jButtonUploadImage)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -173,7 +147,7 @@ public class ProfileFrame extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
+ 
     private void jButtonUploadImageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonUploadImageActionPerformed
         // TODO add your handling code here: 
         JFileChooser fileChooser = new JFileChooser();
@@ -185,7 +159,7 @@ public class ProfileFrame extends javax.swing.JFrame {
             return;
         }
 
-        //File wallpaper dari komputer, wallpaper mana yang ingin di upload 
+        //File wallpaper dari komputer, wallpaper mana yang ingin di upload. 
         File fileWallpaper = fileChooser.getSelectedFile();     
         
         File targetDirectory = new File("src/uploads"); 
@@ -196,44 +170,46 @@ public class ProfileFrame extends javax.swing.JFrame {
 
         long timestamp = System.currentTimeMillis();
         String changedFileName = fileWallpaper.getName().replace(" ", "_");
-        String uniqueFileName = currentUserId + "_" + timestamp + "_" + changedFileName;       
-        
-        File destinationFile = new File(targetDirectory, uniqueFileName);
+        String uniqueFileName = currentUserId + "_" + timestamp + "_" + changedFileName;              
+        File destinationFile = new File(targetDirectory, uniqueFileName);     
+         
+        String title = JOptionPane.showInputDialog(this, "Masukkan Judul Wallpaper:");
+        String description = JOptionPane.showInputDialog(this, "(Boleh di skip!) Masukkan Deskripsi:");
+        String category = JOptionPane.showInputDialog(this, "Masukkan Kategori :");
 
-        try {         
-            String title = JOptionPane.showInputDialog(this, "Masukkan Judul Wallpaper:");
-            String description = JOptionPane.showInputDialog(this, "(Boleh di skip!) Masukkan Deskripsi:");
-            String category = JOptionPane.showInputDialog(this, "Masukkan Kategori :");
+        if (title == null || category == null || title.trim().isEmpty() || category.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Wallpaper harus diberikan title dan Category!!");
+            return;
+        }
 
-            if (title == null || category == null || title.trim().isEmpty() || category.trim().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Wallpaper harus diberikan title dan Category!!");
-                return;
-            }
-           
-            // Masukan ke database XAMPP
+        try {             
+            // Copy file ke folder uploads
+            Files.copy(fileWallpaper.toPath(), destinationFile.toPath(), StandardCopyOption.REPLACE_EXISTING);             
+            
             String insertQuerySQL = "INSERT INTO artworks (title, description, category, image_path, user_id) VALUES (?, ?, ?, ?, ?)";
             try (Connection con = DBConnection.getConnection();
                 PreparedStatement AddWallapaperPstmt = con.prepareStatement(insertQuerySQL)) {
-
+                
+                // Masukan ke database XAMPP
                 AddWallapaperPstmt.setString(1, title);
                 AddWallapaperPstmt.setString(2, description.trim().isEmpty() ? "" : description);
                 AddWallapaperPstmt.setString(3, category);
                 AddWallapaperPstmt.setString(4, uniqueFileName); 
                 AddWallapaperPstmt.setInt(5, currentUserId);
-                AddWallapaperPstmt.executeUpdate();
+                AddWallapaperPstmt.executeUpdate();   
                 
-                // Copy file ke folder uploads
-                Files.copy(fileWallpaper.toPath(), destinationFile.toPath(), StandardCopyOption.REPLACE_EXISTING);           
-            }
-            
-            JOptionPane.showMessageDialog(this, "Wallpaper berhasil diunggah!");
-            showGalleryWallpaperUser();
+                JOptionPane.showMessageDialog(this, "Wallpaper berhasil diunggah!");
+                showGalleryWallpaperUser();
+                
+            } catch (SQLException e) {              
+                if (destinationFile.exists()) {
+                    destinationFile.delete();
+                } 
+                JOptionPane.showMessageDialog(this, "Gagal memproses unggahan " + e.getMessage(), "Database Error" ,JOptionPane.ERROR_MESSAGE);              
+            }     
 
-        } catch (IOException | SQLException e) {             
-            if (destinationFile.exists()) {
-                destinationFile.delete();
-            }          
-            JOptionPane.showMessageDialog(this, "Gagal memproses unggahan: " + e.getMessage());
+        } catch (IOException e) {                                     
+            JOptionPane.showMessageDialog(this, "Gagal memproses unggahan: " + e.getMessage(), "Folder Error" ,JOptionPane.ERROR_MESSAGE);          
         }   
     }//GEN-LAST:event_jButtonUploadImageActionPerformed
 
@@ -241,7 +217,7 @@ public class ProfileFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         this.dispose();
         
-        HomeFrame homeFrame = new HomeFrame(isLogin,currentUserId,currentUsername);
+        HomeFrame homeFrame = new HomeFrame(isUserLoggedIn,currentUserId,currentUsername);
         homeFrame.setVisible(true);
     }//GEN-LAST:event_jLabelTitleMouseClicked
 
@@ -253,18 +229,17 @@ public class ProfileFrame extends javax.swing.JFrame {
         GalleryProvider gallery = new WallpaperPrivate();
         
         List<Wallpaper> daftarWallpaper = gallery.getGalleryWallpaper(currentUserId);
-
-        for (Wallpaper wp : daftarWallpaper) {
-            WallpaperCard card = new WallpaperCard(wp, currentUserId ,currentUsername, this); 
-            jPanelProfileGallery.add(card);
-        }
         
         JPanel wrapper = new JPanel(new BorderLayout());        
         wrapper.setBackground(jPanelProfileGallery.getBackground());
-        wrapper.add(jPanelProfileGallery, BorderLayout.NORTH);
-        
+        wrapper.add(jPanelProfileGallery, BorderLayout.NORTH);        
         jScrollPanePrivateWallpaperGallery.setViewportView(wrapper);
         
+        for (Wallpaper wp : daftarWallpaper) {
+            WallpaperCard card = new WallpaperCard(wp, currentUserId, this); 
+            jPanelProfileGallery.add(card);
+        }
+     
         jPanelProfileGallery.revalidate();
         jPanelProfileGallery.repaint();        
       
@@ -293,7 +268,7 @@ public class ProfileFrame extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new ProfileFrame(2,"vin_art","Test").setVisible(true));
+       java.awt.EventQueue.invokeLater(() -> new ProfileFrame(4,"Test","").setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -6,10 +6,7 @@ package views;
 import database.DBConnection;
 import java.awt.Image;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import javax.swing.ImageIcon;
@@ -18,6 +15,7 @@ import models.Wallpaper;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import java.sql.*;
+import static models.Wallpaper.getUsernameById;
 /**
  *
  * @author Nice
@@ -31,17 +29,15 @@ public class DetailFrame extends javax.swing.JFrame {
      */
     
    private final Wallpaper wallpaperInfo;
-   private final String currentUsername;
    private final JFrame mainFrame;
     
-    public DetailFrame(Wallpaper wp,  int currentUserId, String currentUsername, JFrame mainFrame, File fileGambar) {
+    public DetailFrame(Wallpaper wp,  int currentUserId, JFrame mainFrame, File fileImage) {
         this.wallpaperInfo = wp;
-        this.currentUsername = currentUsername;
-        this.mainFrame = mainFrame;
+        this.mainFrame = mainFrame;       
         
-        //this.setSize(800, 615);
         initComponents();
         
+        this.setSize(800, 615);
         this.setTitle(wallpaperInfo.getTitle());
         
         if (this.mainFrame instanceof ProfileFrame && currentUserId == wallpaperInfo.getUserId()) {
@@ -50,7 +46,7 @@ public class DetailFrame extends javax.swing.JFrame {
             jButtonDelete.setVisible(false); 
         }
 
-        showWallpaperDetail(fileGambar);
+        showWallpaperDetail(fileImage);
     } 
 
     /**
@@ -123,7 +119,7 @@ public class DetailFrame extends javax.swing.JFrame {
                 .addComponent(jButtonDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButtonDownload)
-                .addContainerGap(81, Short.MAX_VALUE))
+                .addContainerGap(82, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -175,7 +171,7 @@ public class DetailFrame extends javax.swing.JFrame {
     private void jButtonDownloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDownloadActionPerformed
         // TODO add your handling code here:
         if (this.wallpaperInfo == null || this.wallpaperInfo.getImagePath() == null) {
-            JOptionPane.showMessageDialog(this, "Data gambar tidak valid! tidak ada di database", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Data gambar tidak ada di database?", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
         
@@ -194,16 +190,16 @@ public class DetailFrame extends javax.swing.JFrame {
         fileChooser.setDialogTitle("Pilih Lokasi Simpan Wallpaper");
         
         String changedFileName = this.wallpaperInfo.getTitle().replace(" ", "_") + ".jpg";
-        fileChooser.setSelectedFile(new File(changedFileName));       
+        fileChooser.setSelectedFile(new File(fileChooser.getCurrentDirectory(), changedFileName));      
       
         int pilihanUser = fileChooser.showSaveDialog(this);
         
         if (pilihanUser == JFileChooser.APPROVE_OPTION) {
            
-            File fileTujuan = fileChooser.getSelectedFile();
+            File destinationFile = fileChooser.getSelectedFile();
             
             try {               
-                Files.copy(fileWallpaper.toPath(), fileTujuan.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                Files.copy(fileWallpaper.toPath(), destinationFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
                 JOptionPane.showMessageDialog(this, "Wallpaper berhasil diunduh!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
             } catch (IOException  e) {
                 JOptionPane.showMessageDialog(this, "Gagal mengunduh Wallpaper: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -267,45 +263,44 @@ public class DetailFrame extends javax.swing.JFrame {
       
     }//GEN-LAST:event_jButtonDeleteActionPerformed
 
-    private void showWallpaperDetail(File fileGambar){
+    private void showWallpaperDetail(File fileImage){
         
         int lebar = 800;
         int panjang = 500;
         
-        if (wallpaperInfo != null) {
-            
+        if (wallpaperInfo == null) {
+            System.out.println("Error: Data wallpaper tidak ditemukan.");
+            return;
+        }
+             
             jLabelImageTitle.setText(wallpaperInfo.getTitle());
-            jLabelUploaderName.setText("Uploaded By: " + currentUsername);
-            jLabelCategory.setText(wallpaperInfo.getCategory());         
+            jLabelUploaderName.setText("Uploaded By: " + getUsernameById(wallpaperInfo.getUserId()));
+            jLabelCategory.setText("Category:" + wallpaperInfo.getCategory());         
             jLabelDescription.setText(wallpaperInfo.getDescription());
             jLabelDate.setText("Created At: " + wallpaperInfo.getTimeAdded().substring(0,wallpaperInfo.getTimeAdded().indexOf(' ')));
            
             try {
                 
-                    ImageIcon selectedIcon;
+                    ImageIcon selectedImage;
                     
-                    if (fileGambar.exists() && this.wallpaperInfo.getImagePath() != null) {
+                    if (fileImage.exists() && this.wallpaperInfo.getImagePath() != null) {
                         
-                        selectedIcon = new ImageIcon(fileGambar.getAbsolutePath());
+                        selectedImage = new ImageIcon(fileImage.getAbsolutePath());
 
                         
                     } else {
                         
-                        selectedIcon = new ImageIcon("src/uploads/default.jpg");
+                        selectedImage = new ImageIcon("src/uploads/default.jpg");
                         
                     }
                     
-                    Image scaledImage = selectedIcon.getImage().getScaledInstance(lebar, panjang, Image.SCALE_SMOOTH);
+                    Image scaledImage = selectedImage.getImage().getScaledInstance(lebar, panjang, Image.SCALE_SMOOTH);
 
                     jLabelImage.setIcon(new ImageIcon(scaledImage));
                    
                 } catch (Exception e) {
                     e.printStackTrace();
-                } 
-            
-        } else {
-            System.out.print("Error");
-        }
+                }        
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables

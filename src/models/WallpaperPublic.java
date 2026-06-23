@@ -49,23 +49,5 @@ public class WallpaperPublic extends Wallpaper implements GalleryProvider{
         }        
         return list;       
     } 
-    
-    public static String getUsernameById(int userId) {
-        String username = "Unknown";
-        String query = "SELECT username FROM users WHERE id = ?";
-        
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-            
-            pstmt.setInt(1, userId);
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    username = rs.getString("username");
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return username;
-    }
+      
 }
