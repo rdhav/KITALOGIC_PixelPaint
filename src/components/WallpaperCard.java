@@ -62,14 +62,6 @@ public class WallpaperCard extends javax.swing.JPanel {
         buildCard();
     }
 
-    // Constructor ketika belum login (guest)
-    public WallpaperCard(Wallpaper wp, JFrame mainFrame) {
-        this.wallpaperInfo = wp;
-        this.currentUserId = -1;
-        this.mainFrame = mainFrame;
-        buildCard();
-    }
-
     private void buildCard() {
         if (wallpaperInfo == null) {
             System.out.println("Error: Data wallpaper tidak ditemukan.");

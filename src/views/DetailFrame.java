@@ -27,20 +27,22 @@ public class DetailFrame extends javax.swing.JFrame {
      * Creates new form DetailFrame
      */
     
-   private final Wallpaper wallpaperInfo;
+    private final Wallpaper wallpaperInfo;
 
-   private final JFrame mainFrame;
+    private final JFrame mainFrame;
     
     public DetailFrame(Wallpaper wp,  int currentUserId, JFrame mainFrame, File fileGambar) {
         this.wallpaperInfo = wp;
         this.mainFrame = mainFrame;
         
         //this.setSize(800, 615);
-        initComponents();
-        
+        initComponents();        
         this.setTitle(wallpaperInfo.getTitle());
         
-        if (this.mainFrame instanceof ProfileFrame && currentUserId == wallpaperInfo.getUserId()) {
+        boolean isUserRegular = this.mainFrame instanceof ProfileFrame && currentUserId == wallpaperInfo.getUserId();
+        boolean isUserAdmin = this.mainFrame instanceof ManageFrame && currentUserId == 1;
+        
+        if (isUserRegular || isUserAdmin) {
             jButtonDelete.setVisible(true);  
         } else {
             jButtonDelete.setVisible(false); 
@@ -124,8 +126,8 @@ public class DetailFrame extends javax.swing.JFrame {
                 .addGap(122, 122, 122)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(130, 130, 130)
+                    .addComponent(jLabelDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(69, 69, 69)
                 .addComponent(jButtonDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButtonDownload)

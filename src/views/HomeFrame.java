@@ -8,6 +8,7 @@ import components.WallpaperCard;
 import database.DBConnection;
 import interfaces.GalleryProvider;
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -15,7 +16,9 @@ import java.nio.file.StandardCopyOption;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.ResultSet;
 import java.util.List;
+import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import models.Wallpaper;
@@ -58,7 +61,6 @@ public class HomeFrame extends javax.swing.JFrame {
         getContentPane().setBackground(new java.awt.Color(41, 41, 41));
         setResizable(false);
         setLocationRelativeTo(null);
-        ShowWallpaperGalleryAll();
 
         profileBtn.setContentAreaFilled(false);
         uploadBtn.setContentAreaFilled(false);
@@ -70,6 +72,8 @@ public class HomeFrame extends javax.swing.JFrame {
         
         jLabelUsernameHomePage.setText(currentUsername.toUpperCase());  
         
+        getWallpaperCategoryList();
+        ShowWallpaperGalleryAll();       
     }
 
     /**
@@ -94,6 +98,9 @@ public class HomeFrame extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         uploadBtn = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
+        jComboBoxCategory = new javax.swing.JComboBox<>();
+        jButtonReset = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Home Page");
@@ -167,7 +174,7 @@ public class HomeFrame extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 4, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel2)
                                 .addGap(22, 22, 22)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 460, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabelUsernameHomePage))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -233,6 +240,17 @@ public class HomeFrame extends javax.swing.JFrame {
         uploadBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         uploadBtn.addActionListener(this::uploadBtnActionPerformed);
 
+        jLabel7.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel7.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(204, 204, 204));
+        jLabel7.setText("Choose category to filter :");
+
+        jComboBoxCategory.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBoxCategory.addActionListener(this::jComboBoxCategoryActionPerformed);
+
+        jButtonReset.setText("Reset");
+        jButtonReset.addActionListener(this::jButtonResetActionPerformed);
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -240,9 +258,17 @@ public class HomeFrame extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(28, 28, 28)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel5)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addGap(77, 77, 77)
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jComboBoxCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButtonReset)
+                .addGap(48, 48, 48)
                 .addComponent(uploadBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(28, 28, 28))
         );
@@ -250,13 +276,17 @@ public class HomeFrame extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(uploadBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel5)))
-                .addGap(0, 23, Short.MAX_VALUE))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel7)
+                            .addComponent(jComboBoxCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButtonReset))))
+                .addGap(0, 16, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -319,7 +349,7 @@ public class HomeFrame extends javax.swing.JFrame {
                 PreparedStatement AddWallapaperPstmt = con.prepareStatement(insertQuerySQL)) {
                 AddWallapaperPstmt.setString(1, title.trim());
                 AddWallapaperPstmt.setString(2, description != null ? description.trim() : "");
-                AddWallapaperPstmt.setString(3, category.trim());
+                AddWallapaperPstmt.setString(3, category.trim().toLowerCase());
                 AddWallapaperPstmt.setString(4, uniqueFileName);
                 AddWallapaperPstmt.setInt(5, currentUserId);
                 
@@ -355,15 +385,57 @@ public class HomeFrame extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_profileBtnMouseClicked
 
-    private void ShowWallpaperGalleryAll () {
-        
+    private void jComboBoxCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxCategoryActionPerformed
+        // TODO add your handling code here:
+        String selectedCategory = (String) jComboBoxCategory.getSelectedItem();
+
+        GalleryProvider gallery = new WallpaperPublic(); 
+        List<Wallpaper> daftarWallpaper =  gallery.getGalleryWallpaper(currentUserId);
+        List<Wallpaper> filteredDaftarWallpaper = gallery.filterByCategory(daftarWallpaper, selectedCategory);   
+
         jPanelHomeGallery.removeAll();
-        jPanelHomeGallery.setLayout(new java.awt.GridLayout(0, 4, 10, 15));
-        jPanelHomeGallery.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 20, 50, 15));
+
+           for (Wallpaper wp : filteredDaftarWallpaper) {
+               WallpaperCard card = new WallpaperCard(wp, currentUserId, this);
+               jPanelHomeGallery.add(card);
+            }    
+
+       jPanelHomeGallery.revalidate();
+       jPanelHomeGallery.repaint();
+    }//GEN-LAST:event_jComboBoxCategoryActionPerformed
+
+    private void jButtonResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonResetActionPerformed
+        // TODO add your handling code here:
+        jComboBoxCategory.setSelectedIndex(-1);
+        ShowWallpaperGalleryAll();
+    }//GEN-LAST:event_jButtonResetActionPerformed
+    
+    private void getWallpaperCategoryList () {        
+        String getByCategorySQL = "SELECT DISTINCT LOWER(category) AS category_name FROM artworks";       
+        try (Connection con = DBConnection.getConnection();
+            PreparedStatement listCategory = con.prepareStatement(getByCategorySQL)) {
+            
+            ResultSet resListCategory= listCategory.executeQuery();
+            
+            jComboBoxCategory.removeAllItems();
+            
+            while (resListCategory.next()) {
+                
+                jComboBoxCategory.addItem(Character.toUpperCase(resListCategory.getString("category_name").charAt(0)) + resListCategory.getString("category_name").substring(1));
+            }
+            
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "gagal mendapat category", "Database Error" ,JOptionPane.ERROR_MESSAGE);
+        }       
+    }
+    
+    private void ShowWallpaperGalleryAll () {       
+        jPanelHomeGallery.removeAll();
+        jPanelHomeGallery.setLayout(new GridLayout(0, 4, 10, 15));
+        jPanelHomeGallery.setBorder(BorderFactory.createEmptyBorder(10, 20, 50, 15));
         
-        //wallpaper public
-        GalleryProvider gallery = new WallpaperPublic();
-        
+        //gallery public
+        GalleryProvider gallery = new WallpaperPublic();        
         List<Wallpaper> daftarWallpaper =  gallery.getGalleryWallpaper(currentUserId);
         
         for (Wallpaper wp : daftarWallpaper) {
@@ -412,11 +484,14 @@ public class HomeFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonReset;
+    private javax.swing.JComboBox<String> jComboBoxCategory;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabelUsernameHomePage;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

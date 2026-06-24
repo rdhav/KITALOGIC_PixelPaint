@@ -67,6 +67,7 @@ public class ProfileFrame extends javax.swing.JFrame {
         homeBtn.setContentAreaFilled(false);
         uploadBtn.setContentAreaFilled(false);
         
+        getWallpaperCategoryList();
         showGalleryWallpaperUser(); 
     }
 
@@ -107,6 +108,9 @@ public class ProfileFrame extends javax.swing.JFrame {
         jLabel12 = new javax.swing.JLabel();
         jLabelBio1 = new javax.swing.JLabel();
         uploadBtn = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
+        jComboBoxCategory = new javax.swing.JComboBox<>();
+        jButtonReset = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Profile Page");
@@ -400,6 +404,17 @@ public class ProfileFrame extends javax.swing.JFrame {
         uploadBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         uploadBtn.addActionListener(this::uploadBtnActionPerformed);
 
+        jLabel7.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel7.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(204, 204, 204));
+        jLabel7.setText("Search by category  :");
+
+        jComboBoxCategory.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBoxCategory.addActionListener(this::jComboBoxCategoryActionPerformed);
+
+        jButtonReset.setText("Reset");
+        jButtonReset.addActionListener(this::jButtonResetActionPerformed);
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -408,8 +423,16 @@ public class ProfileFrame extends javax.swing.JFrame {
                 .addGap(37, 37, 37)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel12)
-                    .addComponent(jLabelBio1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabelBio1)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addGap(237, 237, 237)
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jComboBoxCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonReset)
+                .addGap(76, 76, 76)
                 .addComponent(uploadBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(36, 36, 36))
         );
@@ -418,11 +441,16 @@ public class ProfileFrame extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(27, 27, 27)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(uploadBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel12)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabelBio1)))
+                        .addComponent(jLabelBio1))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel7)
+                            .addComponent(jComboBoxCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButtonReset))
+                        .addComponent(uploadBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(27, Short.MAX_VALUE))
         );
 
@@ -446,8 +474,7 @@ public class ProfileFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPanePrivateWallpaperGallery, javax.swing.GroupLayout.PREFERRED_SIZE, 443, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(jScrollPanePrivateWallpaperGallery, javax.swing.GroupLayout.PREFERRED_SIZE, 449, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -574,7 +601,7 @@ public class ProfileFrame extends javax.swing.JFrame {
                 PreparedStatement AddWallapaperPstmt = con.prepareStatement(insertQuerySQL)) {
                 AddWallapaperPstmt.setString(1, title.trim());
                 AddWallapaperPstmt.setString(2, description != null ? description.trim() : "");
-                AddWallapaperPstmt.setString(3, category.trim());
+                AddWallapaperPstmt.setString(3, category.trim().toLowerCase());
                 AddWallapaperPstmt.setString(4, uniqueFileName);
                 AddWallapaperPstmt.setInt(5, currentUserId);
                 
@@ -598,12 +625,54 @@ public class ProfileFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_logoutBtnActionPerformed
 
+    private void jComboBoxCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxCategoryActionPerformed
+        // TODO add your handling code here:
+        String selectedCategory = (String) jComboBoxCategory.getSelectedItem();
+
+        GalleryProvider gallery = new WallpaperPrivate();
+        List<Wallpaper> daftarWallpaper =  gallery.getGalleryWallpaper(currentUserId);
+        List<Wallpaper> filteredDaftarWallpaper = gallery.filterByCategory(daftarWallpaper, selectedCategory);
+
+        jPanelProfileGallery.removeAll();
+
+        for (Wallpaper wp : filteredDaftarWallpaper) {
+            WallpaperCard card = new WallpaperCard(wp, currentUserId, this);
+            jPanelProfileGallery.add(card);
+        }
+
+        jPanelProfileGallery.revalidate();
+        jPanelProfileGallery.repaint();
+    }//GEN-LAST:event_jComboBoxCategoryActionPerformed
+
+    private void jButtonResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonResetActionPerformed
+        // TODO add your handling code here:
+        jComboBoxCategory.setSelectedIndex(-1);
+        showGalleryWallpaperUser();
+    }//GEN-LAST:event_jButtonResetActionPerformed
+
+    private void getWallpaperCategoryList () {        
+        String getByCategorySQL = "SELECT DISTINCT LOWER(category) AS category_name FROM artworks";       
+        try (Connection con = DBConnection.getConnection();
+            PreparedStatement listCategory = con.prepareStatement(getByCategorySQL)) {
+            
+            ResultSet resListCategory= listCategory.executeQuery();          
+            jComboBoxCategory.removeAllItems();
+            
+            while (resListCategory.next()) {
+                jComboBoxCategory.addItem(Character.toUpperCase(resListCategory.getString("category_name").charAt(0)) + resListCategory.getString("category_name").substring(1));
+            }
+            
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "gagal mendapat category", "Database Error" ,JOptionPane.ERROR_MESSAGE);
+        }       
+    }
+    
     public void showGalleryWallpaperUser() {
         jPanelProfileGallery.removeAll();
-        jPanelProfileGallery.setLayout(new java.awt.GridLayout(0, 5, 15, 15));
-        jPanelProfileGallery.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 30, 50, 15));
+        jPanelProfileGallery.setLayout(new java.awt.GridLayout(0, 4, 15, 15));
+        jPanelProfileGallery.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 20, 50, 30));
         
-        //wallpaper private
+        //gallery private
         GalleryProvider gallery = new WallpaperPrivate();
         
         List<Wallpaper> daftarWallpaper = gallery.getGalleryWallpaper(currentUserId);
@@ -617,8 +686,10 @@ public class ProfileFrame extends javax.swing.JFrame {
         wrapper.setBackground(jPanelProfileGallery.getBackground());
         wrapper.add(jPanelProfileGallery, BorderLayout.NORTH);
         
-        jScrollPanePrivateWallpaperGallery.setViewportView(wrapper);
+        jScrollPanePrivateWallpaperGallery.setViewportView(wrapper);        
         
+        wrapper.revalidate();        
+        wrapper.repaint(); 
         jPanelProfileGallery.revalidate();
         jPanelProfileGallery.repaint();              
     }    
@@ -645,7 +716,7 @@ public class ProfileFrame extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new ProfileFrame(2,"vin_art","Test").setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new ProfileFrame(2,"","").setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -656,13 +727,16 @@ public class ProfileFrame extends javax.swing.JFrame {
     private javax.swing.JPasswordField editPasswordField;
     private javax.swing.JTextField editUsernameField;
     private javax.swing.JButton homeBtn;
+    private javax.swing.JButton jButtonReset;
     private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JComboBox<String> jComboBoxCategory;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel jLabelBio;
