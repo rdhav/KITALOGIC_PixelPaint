@@ -1,5 +1,6 @@
 package components;
 
+import interfaces.GalleryProvider;
 import models.Wallpaper;
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +13,6 @@ public class WallpaperCard extends javax.swing.JPanel {
     private final Wallpaper wallpaperInfo;
     private final JFrame mainFrame;
     private final int currentUserId;
-    private final String currentUsername;
 
     private JLabel jLabelImage;
     private JLabel jLabelImageTitle;
@@ -55,10 +55,9 @@ public class WallpaperCard extends javax.swing.JPanel {
     }
 
     // Constructor ketika user sudah login
-    public WallpaperCard(Wallpaper wp, int currentUserId, String currentUsername, JFrame mainFrame) {
+    public WallpaperCard(Wallpaper wp, int currentUserId, JFrame mainFrame) {
         this.wallpaperInfo = wp;
         this.currentUserId = currentUserId;
-        this.currentUsername = currentUsername;
         this.mainFrame = mainFrame;
         buildCard();
     }
@@ -67,7 +66,6 @@ public class WallpaperCard extends javax.swing.JPanel {
     public WallpaperCard(Wallpaper wp, JFrame mainFrame) {
         this.wallpaperInfo = wp;
         this.currentUserId = -1;
-        this.currentUsername = "Guest";
         this.mainFrame = mainFrame;
         buildCard();
     }
@@ -136,7 +134,7 @@ public class WallpaperCard extends javax.swing.JPanel {
         );
 
         // Author
-        JLabel jLabelAuthor = new JLabel(kapitalHurufAwal(potongTeksJikaPanjang(wallpaperInfo.getUsernameFromId(), 28)));
+        JLabel jLabelAuthor = new JLabel(kapitalHurufAwal(potongTeksJikaPanjang(GalleryProvider.getUsernameFromId(wallpaperInfo.getUserId()), 28)));
         jLabelAuthor.setFont(new Font("Segoe UI", Font.BOLD, 10));
         jLabelAuthor.setForeground(new Color(1f, 1f, 1f, 0f));
 
@@ -215,7 +213,7 @@ public class WallpaperCard extends javax.swing.JPanel {
     private void bukaDetail() {
         try {
             File fileGambar = new File("src/uploads/" + wallpaperInfo.getImagePath());
-            DetailFrame detail = new DetailFrame(wallpaperInfo, currentUserId, currentUsername, mainFrame, fileGambar);
+            DetailFrame detail = new DetailFrame(wallpaperInfo, currentUserId, mainFrame, fileGambar);
             detail.setVisible(true);
         } catch (Exception e) {
             e.printStackTrace();

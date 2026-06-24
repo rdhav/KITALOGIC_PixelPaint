@@ -31,11 +31,11 @@ public class ProfileFrame extends javax.swing.JFrame {
     /**
      * Creates new form ProfileFrame
      */
-    private boolean isLogin = false;   
     private final int currentUserId; 
     private final String currentUsername;
-    private boolean isEditPanelVisible = false;
     private models.User currentUser; 
+    private boolean isEditPanelVisible = false;
+    private boolean isLogin = false;   
 
     
     public ProfileFrame(int userId, String username, String bio) {
@@ -54,9 +54,7 @@ public class ProfileFrame extends javax.swing.JFrame {
         editPanel.setVisible(false);
         editPanel.setPreferredSize(new java.awt.Dimension(0, 0));
         editPanel.setMinimumSize(new java.awt.Dimension(0, 0));
-        getContentPane().setBackground(new java.awt.Color(41, 41, 41));
-        showGalleryWallpaperUser(); 
-        
+        getContentPane().setBackground(new java.awt.Color(41, 41, 41));       
 
         jLabelName.setText(username.toUpperCase());
 
@@ -68,10 +66,9 @@ public class ProfileFrame extends javax.swing.JFrame {
         
         homeBtn.setContentAreaFilled(false);
         uploadBtn.setContentAreaFilled(false);
+        
+        showGalleryWallpaperUser(); 
     }
-    
-
-
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -186,7 +183,7 @@ public class ProfileFrame extends javax.swing.JFrame {
                             .addComponent(jLabel9)
                             .addComponent(jLabelBio))
                         .addGap(22, 22, 22)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 439, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 438, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(homeBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(logoutBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -459,7 +456,7 @@ public class ProfileFrame extends javax.swing.JFrame {
 
     private void homeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeBtnActionPerformed
         // TODO add your handling code here:
-        new HomeFrame(true, currentUserId, currentUsername).setVisible(true);
+        new HomeFrame(isLogin, currentUserId, currentUsername).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_homeBtnActionPerformed
 
@@ -546,44 +543,55 @@ public class ProfileFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileFilter(new FileNameExtensionFilter("Image Files", "jpg", "png", "jpeg"));
+        
         int result = fileChooser.showOpenDialog(this);
+        
         if (result != JFileChooser.APPROVE_OPTION) {
             return;
         }
-        File sourceFile = fileChooser.getSelectedFile();
+        
+        File fileWallpaper = fileChooser.getSelectedFile();
         File targetDirectory = new File("src/uploads");
+        
         if (!targetDirectory.exists()) {
             targetDirectory.mkdirs();
         }
-        long timestamp = System.currentTimeMillis();
-        String changedFileName = sourceFile.getName().replace(" ", "_");
-        String uniqueFileName = currentUserId + "_" + timestamp + "_" + changedFileName;
+        
+        String title = JOptionPane.showInputDialog(this, "Masukkan Judul Wallpaper:");
+        String description = JOptionPane.showInputDialog(this, "(Boleh di skip!)Masukkan Deskripsi:");
+        String category = JOptionPane.showInputDialog(this, "Masukkan Kategori :");
+        
+        if (title == null || category == null) {
+            JOptionPane.showMessageDialog(this, "Wallpaper harus diberikan title dan Category!!");
+            return;
+        }
+        
+        String uniqueFileName = currentUserId + "_" + System.currentTimeMillis() + "_" + (fileWallpaper.getName().replace(" ", "_"));
         File destinationFile = new File(targetDirectory, uniqueFileName);
-        try {
-            String title = JOptionPane.showInputDialog(this, "Masukkan Judul Wallpaper:");
-            String description = JOptionPane.showInputDialog(this, "(Boleh di skip!)Masukkan Deskripsi:");
-            String category = JOptionPane.showInputDialog(this, "Masukkan Kategori :");
-            if (title == null || category == null) {
-                JOptionPane.showMessageDialog(this, "Wallpaper harus diberikan title dan Category!!");
-                return;
-            }
-            // Proses copy file secara langsung ke folder uploads
-            Files.copy(sourceFile.toPath(), destinationFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+             
             String insertQuerySQL = "INSERT INTO artworks (title, description, category, image_path, user_id) VALUES (?, ?, ?, ?, ?)";
             try (Connection con = DBConnection.getConnection();
                 PreparedStatement AddWallapaperPstmt = con.prepareStatement(insertQuerySQL)) {
-                AddWallapaperPstmt.setString(1, title);
-                AddWallapaperPstmt.setString(2, description);
-                AddWallapaperPstmt.setString(3, category);
+                AddWallapaperPstmt.setString(1, title.trim());
+                AddWallapaperPstmt.setString(2, description != null ? description.trim() : "");
+                AddWallapaperPstmt.setString(3, category.trim());
                 AddWallapaperPstmt.setString(4, uniqueFileName);
                 AddWallapaperPstmt.setInt(5, currentUserId);
+                
+                // Proses copy file secara langsung ke folder uploads
+                Files.copy(fileWallpaper.toPath(), destinationFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
                 AddWallapaperPstmt.executeUpdate();
+                
+                JOptionPane.showMessageDialog(this, "Wallpaper berhasil diunggah!");
+                showGalleryWallpaperUser();
             }
-            showGalleryWallpaperUser();
-            JOptionPane.showMessageDialog(this, "Wallpaper berhasil diunggah!");
-        } catch (IOException | SQLException e) {
+            
+         catch (IOException | SQLException e) {
+             if (destinationFile.exists()) {
+                destinationFile.delete();
+            }
             JOptionPane.showMessageDialog(this, "Gagal memproses unggahan: " + e.getMessage());
-        }
+        }       
     }//GEN-LAST:event_uploadBtnActionPerformed
 
     private void logoutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutBtnActionPerformed
@@ -601,7 +609,7 @@ public class ProfileFrame extends javax.swing.JFrame {
         List<Wallpaper> daftarWallpaper = gallery.getGalleryWallpaper(currentUserId);
 
         for (Wallpaper wp : daftarWallpaper) {
-            WallpaperCard card = new WallpaperCard(wp, currentUserId ,currentUsername, this); 
+            WallpaperCard card = new WallpaperCard(wp, currentUserId, this); 
             jPanelProfileGallery.add(card);
         }
         
@@ -612,9 +620,7 @@ public class ProfileFrame extends javax.swing.JFrame {
         jScrollPanePrivateWallpaperGallery.setViewportView(wrapper);
         
         jPanelProfileGallery.revalidate();
-        jPanelProfileGallery.repaint();        
-      
-//        jLabelJumlahWallpaper.setText("Total Images : " +  GalleryProvider.countWallpaper(daftarWallpaper));
+        jPanelProfileGallery.repaint();              
     }    
     
     /**

@@ -88,24 +88,4 @@ public class Wallpaper  {
         this.timeAdded = timeAdded;
     }
     
-    public String getUsernameFromId() {
-    String result = "Unknown";
-    String sql = "SELECT username FROM users WHERE id = ?";
-
-    try (java.sql.Connection con = database.DBConnection.getConnection();
-         java.sql.PreparedStatement ps = con.prepareStatement(sql)) {
-
-        ps.setInt(1, this.userId);
-        java.sql.ResultSet rs = ps.executeQuery();
-
-        if (rs.next()) {
-            result = rs.getString("username");
-        }
-
-    } catch (java.sql.SQLException e) {
-        e.printStackTrace();
-    }
-
-    return result;
-}
 }

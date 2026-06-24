@@ -5,8 +5,16 @@
 package views;
 
 import components.WallpaperCard;
+import database.DBConnection;
 import interfaces.GalleryProvider;
 import java.awt.BorderLayout;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -51,11 +59,7 @@ public class HomeFrame extends javax.swing.JFrame {
         setResizable(false);
         setLocationRelativeTo(null);
         ShowWallpaperGalleryAll();
-//        int tinggiWindow = 660;
-//        int tinggiHeader = 171;
-//        jScrollPanePublicWallpaperGallery.setPreferredSize(
-//            new java.awt.Dimension(1080, tinggiWindow - tinggiHeader)
-//        );
+
         profileBtn.setContentAreaFilled(false);
         uploadBtn.setContentAreaFilled(false);
         loginBtn.setContentAreaFilled(false);
@@ -163,7 +167,7 @@ public class HomeFrame extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 4, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel2)
                                 .addGap(22, 22, 22)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 460, Short.MAX_VALUE)
                         .addComponent(jLabelUsernameHomePage))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -236,23 +240,23 @@ public class HomeFrame extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(28, 28, 28)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(uploadBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30))
+                .addGap(28, 28, 28))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(uploadBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                    .addComponent(uploadBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel5)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 23, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -269,9 +273,9 @@ public class HomeFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPanePublicWallpaperGallery))
+                .addComponent(jScrollPanePublicWallpaperGallery, javax.swing.GroupLayout.DEFAULT_SIZE, 382, Short.MAX_VALUE))
         );
 
         getAccessibleContext().setAccessibleName("PixelPaint Gallery");
@@ -283,55 +287,55 @@ public class HomeFrame extends javax.swing.JFrame {
     private void uploadBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uploadBtnActionPerformed
         // TODO add your handling code here:
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Image Files", "jpg", "png", "jpeg"));
+        fileChooser.setFileFilter(new FileNameExtensionFilter("Image Files", "jpg", "png", "jpeg"));
+        
         int result = fileChooser.showOpenDialog(this);
-
+        
         if (result != JFileChooser.APPROVE_OPTION) {
             return;
         }
-
-        java.io.File sourceFile = fileChooser.getSelectedFile();
-        java.io.File targetDirectory = new java.io.File("src/uploads");
-
+        
+        File fileWallpaper = fileChooser.getSelectedFile();
+        File targetDirectory = new File("src/uploads");
+        
         if (!targetDirectory.exists()) {
             targetDirectory.mkdirs();
         }
-
-        long timestamp = System.currentTimeMillis();
-        String changedFileName = sourceFile.getName().replace(" ", "_");
-        String uniqueFileName = currentUserId + "_" + timestamp + "_" + changedFileName;
-        java.io.File destinationFile = new java.io.File(targetDirectory, uniqueFileName);
-
-        try {
-            String title = JOptionPane.showInputDialog(this, "Masukkan Judul Wallpaper:");
-            String description = JOptionPane.showInputDialog(this, "(Boleh di skip!) Masukkan Deskripsi:");
-            String category = JOptionPane.showInputDialog(this, "Masukkan Kategori:");
-
-            if (title == null || title.trim().isEmpty() || category == null || category.trim().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Wallpaper harus diberikan Title dan Category!", "Peringatan", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-
-            java.nio.file.Files.copy(sourceFile.toPath(), destinationFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
-
+        
+        String title = JOptionPane.showInputDialog(this, "Masukkan Judul Wallpaper:");
+        String description = JOptionPane.showInputDialog(this, "(Boleh di skip!)Masukkan Deskripsi:");
+        String category = JOptionPane.showInputDialog(this, "Masukkan Kategori :");
+        
+        if (title == null || category == null) {
+            JOptionPane.showMessageDialog(this, "Wallpaper harus diberikan title dan Category!!");
+            return;
+        }
+        
+        String uniqueFileName = currentUserId + "_" + System.currentTimeMillis() + "_" + (fileWallpaper.getName().replace(" ", "_"));
+        File destinationFile = new File(targetDirectory, uniqueFileName);
+             
             String insertQuerySQL = "INSERT INTO artworks (title, description, category, image_path, user_id) VALUES (?, ?, ?, ?, ?)";
-            try (java.sql.Connection con = database.DBConnection.getConnection();
-                 java.sql.PreparedStatement ps = con.prepareStatement(insertQuerySQL)) {
-
-                ps.setString(1, title.trim());
-                ps.setString(2, description != null ? description.trim() : "");
-                ps.setString(3, category.trim());
-                ps.setString(4, uniqueFileName);
-                ps.setInt(5, currentUserId);
-                ps.executeUpdate();
+            try (Connection con = DBConnection.getConnection();
+                PreparedStatement AddWallapaperPstmt = con.prepareStatement(insertQuerySQL)) {
+                AddWallapaperPstmt.setString(1, title.trim());
+                AddWallapaperPstmt.setString(2, description != null ? description.trim() : "");
+                AddWallapaperPstmt.setString(3, category.trim());
+                AddWallapaperPstmt.setString(4, uniqueFileName);
+                AddWallapaperPstmt.setInt(5, currentUserId);
+                
+                // Proses copy file secara langsung ke folder uploads
+                Files.copy(fileWallpaper.toPath(), destinationFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                AddWallapaperPstmt.executeUpdate();
+                
+                JOptionPane.showMessageDialog(this, "Wallpaper berhasil diunggah!");
+                ShowWallpaperGalleryAll();
             }
-
-            // Refresh gallery setelah upload
-            ShowWallpaperGalleryAll();
-            JOptionPane.showMessageDialog(this, "Wallpaper berhasil diunggah!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
-
-        } catch (java.io.IOException | java.sql.SQLException e) {
-            JOptionPane.showMessageDialog(this, "Gagal memproses unggahan: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            
+         catch (IOException | SQLException e) {
+             if (destinationFile.exists()) {
+                destinationFile.delete();
+            }
+            JOptionPane.showMessageDialog(this, "Gagal memproses unggahan: " + e.getMessage());
         }
     }//GEN-LAST:event_uploadBtnActionPerformed
 
@@ -363,7 +367,7 @@ public class HomeFrame extends javax.swing.JFrame {
         List<Wallpaper> daftarWallpaper =  gallery.getGalleryWallpaper(currentUserId);
         
         for (Wallpaper wp : daftarWallpaper) {
-            WallpaperCard card = new WallpaperCard(wp, currentUserId, currentUsername, this);
+            WallpaperCard card = new WallpaperCard(wp, currentUserId, this);
             jPanelHomeGallery.add(card);
         }
         
@@ -376,13 +380,10 @@ public class HomeFrame extends javax.swing.JFrame {
         jScrollPanePublicWallpaperGallery.setHorizontalScrollBarPolicy(javax.swing.JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPanePublicWallpaperGallery.getVerticalScrollBar().setUnitIncrement(20);
 
-        
-//        jScrollPanePublicWallpaperGallery.setPreferredSize(null);
         wrapper.revalidate();        
         wrapper.repaint();      
         jPanelHomeGallery.revalidate();
-        jPanelHomeGallery.repaint(); 
-        
+        jPanelHomeGallery.repaint();         
     }
     
     /**

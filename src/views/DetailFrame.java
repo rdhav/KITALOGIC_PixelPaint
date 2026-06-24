@@ -4,11 +4,9 @@
  */
 package views;
 import database.DBConnection;
+import interfaces.GalleryProvider;
 import java.awt.Image;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import javax.swing.ImageIcon;
@@ -30,14 +28,11 @@ public class DetailFrame extends javax.swing.JFrame {
      */
     
    private final Wallpaper wallpaperInfo;
-   private final String currentUsername;
-   private final int currentUserId;  
+
    private final JFrame mainFrame;
     
-    public DetailFrame(Wallpaper wp,  int currentUserId, String currentUsername, JFrame mainFrame, File fileGambar) {
+    public DetailFrame(Wallpaper wp,  int currentUserId, JFrame mainFrame, File fileGambar) {
         this.wallpaperInfo = wp;
-        this.currentUsername = currentUsername;
-        this.currentUserId = currentUserId;
         this.mainFrame = mainFrame;
         
         //this.setSize(800, 615);
@@ -54,27 +49,6 @@ public class DetailFrame extends javax.swing.JFrame {
         getContentPane().setBackground(new java.awt.Color(255, 255, 255));
         showWallpaperDetail(fileGambar);
     } 
-    
-    private String getUsernameUploader(int userId) {
-        String result = "Unknown";
-        String sql = "SELECT username FROM users WHERE id = ?";
-
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-
-            ps.setInt(1, userId);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                result = rs.getString("username");
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return result;
-    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -211,9 +185,9 @@ public class DetailFrame extends javax.swing.JFrame {
             return;
         }
         
-        File sourceFile = new File("src/uploads/" + this.wallpaperInfo.getImagePath());
+        File fileWallpaper = new File("src/uploads/" + this.wallpaperInfo.getImagePath());
             
-        if (!sourceFile.exists()) {
+        if (!fileWallpaper.exists()) {
         JOptionPane.showMessageDialog(this, """
             Gagal mendownload! File asli tidak ditemukan di folder: "src/uploads/"
             Kemungkinan file telah terhapus atau dipindahkan secara manual.""", 
@@ -223,22 +197,22 @@ public class DetailFrame extends javax.swing.JFrame {
         }
         
         JFileChooser fileChooser = new JFileChooser();
-        String namaFileBersih = this.wallpaperInfo.getTitle().replaceAll("[^a-zA-Z0-9]", "_") + ".jpg";
+        fileChooser.setDialogTitle("Pilih Lokasi Simpan Wallpaper");  
+        
+        String imagePath = this.wallpaperInfo.getImagePath();
+        String extension = imagePath.substring(imagePath.lastIndexOf(".")); 
+        
+        String namaFileBersih = this.wallpaperInfo.getTitle().replaceAll("[^a-zA-Z0-9]", "_") + extension;            
         fileChooser.setSelectedFile(new File(namaFileBersih));
-        fileChooser.setDialogTitle("Pilih Lokasi Simpan Wallpaper");
-      
-        File fileTujuan = fileChooser.getSelectedFile();
         
         int pilihanUser = fileChooser.showSaveDialog(this);
         
-        if (pilihanUser == JFileChooser.APPROVE_OPTION) {
-           
-            try {
+        if (pilihanUser == JFileChooser.APPROVE_OPTION) {       
+                File fileTujuan = fileChooser.getSelectedFile(); 
                 
-                Files.copy(sourceFile.toPath(), fileTujuan.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
-                JOptionPane.showMessageDialog(this, "Wallpaper berhasil diunduh!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
-
+            try {            
+                Files.copy(fileWallpaper.toPath(), fileTujuan.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                JOptionPane.showMessageDialog(this, "Wallpaper berhasil diunduh!", "Sukses", JOptionPane.INFORMATION_MESSAGE);            
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Gagal mengunduh Wallpaper: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -308,7 +282,7 @@ public class DetailFrame extends javax.swing.JFrame {
         if (wallpaperInfo != null) {
             
             jLabelImageTitle.setText(wallpaperInfo.getTitle());
-            jLabelUploaderName.setText("Uploaded By: " + getUsernameUploader(wallpaperInfo.getUserId()));
+            jLabelUploaderName.setText("Uploaded By: " + GalleryProvider.getUsernameFromId(wallpaperInfo.getUserId()));
             jLabelCategory.setText(wallpaperInfo.getCategory());         
             jLabelDescription.setText(wallpaperInfo.getDescription());
             jLabelDate.setText("Created At: " + wallpaperInfo.getTimeAdded().substring(0,wallpaperInfo.getTimeAdded().indexOf(' ')));
