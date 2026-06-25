@@ -31,11 +31,24 @@ public interface GalleryProvider {
     }
     
     //static method
-    static int countWallpaper (List<Wallpaper> daftarWallpaper) {       
-        if (daftarWallpaper == null || daftarWallpaper.isEmpty()) {
-            return 0;
-        }     
-        return  daftarWallpaper.size();       
-    }
-    
+    static public String getUsernameFromId(int userId) {
+        String result = "Unknown";
+        String sql = "SELECT username FROM users WHERE id = ?";
+
+        try (java.sql.Connection con = database.DBConnection.getConnection();
+             java.sql.PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+            java.sql.ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                result = rs.getString("username");
+            }
+
+        } catch (java.sql.SQLException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }   
 }
