@@ -132,7 +132,7 @@ public class WallpaperCard extends javax.swing.JPanel {
 
         // Gap antara kategori dan author
         Box.Filler gap = new Box.Filler(
-            new Dimension(0, 6), new Dimension(0, 0), new Dimension(0, 0)
+            new Dimension(0, 3), new Dimension(0, 2), new Dimension(0, 2)
         );
 
         // Author
@@ -142,7 +142,7 @@ public class WallpaperCard extends javax.swing.JPanel {
 
         overlayBackground.add(jLabelImageTitle);
         overlayBackground.add(jLabelKategori);
-        overlayBackground.add(gap); // ← gap di antara keduanya
+        overlayBackground.add(gap); 
         overlayBackground.add(jLabelAuthor);
 
         java.awt.event.MouseAdapter hoverListener = new java.awt.event.MouseAdapter() {
