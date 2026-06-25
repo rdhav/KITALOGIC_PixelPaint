@@ -361,8 +361,7 @@ public class ProfileFrame extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(editBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(editErrorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(editErrorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(editPanelLayout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addGap(18, 18, 18)
@@ -372,8 +371,8 @@ public class ProfileFrame extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(editPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jCheckBox1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jScrollPanePrivateWallpaperGallery.setBorder(null);
@@ -527,7 +526,12 @@ public class ProfileFrame extends javax.swing.JFrame {
             editPanel.setVisible(false);
             editPanel.setPreferredSize(new java.awt.Dimension(0, 0));
             editPanel.setMinimumSize(new java.awt.Dimension(0, 0));
-
+            JOptionPane.showMessageDialog(this, 
+                "Profil berhasil diperbarui!\nSilakan login kembali!", 
+                "Berhasil", 
+                JOptionPane.INFORMATION_MESSAGE);
+                new LoginFrame().setVisible(true);
+            this.dispose();
             setSize(1080, 700);        
             setLocationRelativeTo(null);
             getContentPane().revalidate();
@@ -589,6 +593,8 @@ public class ProfileFrame extends javax.swing.JFrame {
 
     private void logoutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutBtnActionPerformed
         // TODO add your handling code here:
+        new LoginFrame().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_logoutBtnActionPerformed
 
     public void showGalleryWallpaperUser() {
