@@ -554,7 +554,12 @@ public class ProfileFrame extends javax.swing.JFrame {
             editPanel.setVisible(false);
             editPanel.setPreferredSize(new java.awt.Dimension(0, 0));
             editPanel.setMinimumSize(new java.awt.Dimension(0, 0));
-
+            JOptionPane.showMessageDialog(this, 
+                "Profil berhasil diperbarui!\nSilakan login kembali!", 
+                "Berhasil", 
+                JOptionPane.INFORMATION_MESSAGE);
+                new LoginFrame().setVisible(true);
+            this.dispose();
             setSize(1080, 700);        
             setLocationRelativeTo(null);
             getContentPane().revalidate();
@@ -628,6 +633,8 @@ public class ProfileFrame extends javax.swing.JFrame {
 
     private void logoutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutBtnActionPerformed
         // TODO add your handling code here:
+        new LoginFrame().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_logoutBtnActionPerformed
 
     private void jComboBoxCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxCategoryActionPerformed

@@ -47,7 +47,11 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
+<<<<<<< HEAD
               <Component id="jScrollPanePublicWallpaperGallery" pref="382" max="32767" attributes="0"/>
+=======
+              <Component id="jScrollPanePublicWallpaperGallery" pref="398" max="32767" attributes="0"/>
+>>>>>>> 69f0197a8e2cedb51892978802aa40f88d9214e4
           </Group>
       </Group>
     </DimensionLayout>
@@ -304,9 +308,15 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
+<<<<<<< HEAD
                   <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="uploadBtn" min="-2" pref="50" max="-2" attributes="0"/>
+=======
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="uploadBtn" max="32767" attributes="0"/>
+>>>>>>> 69f0197a8e2cedb51892978802aa40f88d9214e4
                       <Group type="102" attributes="0">
                           <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
@@ -318,7 +328,11 @@
                           </Group>
                       </Group>
                   </Group>
+<<<<<<< HEAD
                   <EmptySpace min="0" pref="16" max="32767" attributes="0"/>
+=======
+                  <EmptySpace pref="19" max="32767" attributes="0"/>
+>>>>>>> 69f0197a8e2cedb51892978802aa40f88d9214e4
               </Group>
           </Group>
         </DimensionLayout>

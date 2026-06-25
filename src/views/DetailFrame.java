@@ -38,17 +38,37 @@ public class DetailFrame extends javax.swing.JFrame {
         //this.setSize(800, 615);
         initComponents();        
         this.setTitle(wallpaperInfo.getTitle());
+<<<<<<< HEAD
         
         boolean isUserRegular = this.mainFrame instanceof ProfileFrame && currentUserId == wallpaperInfo.getUserId();
         boolean isUserAdmin = this.mainFrame instanceof ManageFrame && currentUserId == 1;
         
         if (isUserRegular || isUserAdmin) {
             jButtonDelete.setVisible(true);  
+=======
+        boolean isGuest = (currentUserId == -1);
+        if (isGuest) {
+            jButtonDelete.setVisible(false);
+            jButtonDownload.setVisible(true);
+            jButtonDownload.setPreferredSize(new java.awt.Dimension(762, 40));
+>>>>>>> 69f0197a8e2cedb51892978802aa40f88d9214e4
         } else {
-            jButtonDelete.setVisible(false); 
-        }
+            jButtonDownload.setVisible(true);
+            jButtonDownload.setPreferredSize(new java.awt.Dimension(382, 40));
 
-        getContentPane().setBackground(new java.awt.Color(255, 255, 255));
+            if (this.mainFrame instanceof ProfileFrame && currentUserId == wallpaperInfo.getUserId()) {
+                jButtonDelete.setVisible(true);
+                jButtonDelete.setPreferredSize(new java.awt.Dimension(378, 40));
+            } else {
+                jButtonDelete.setVisible(false);
+                jButtonDownload.setPreferredSize(new java.awt.Dimension(762, 40)); 
+            }
+        }
+        
+        jButtonDownload.setContentAreaFilled(false);
+        jButtonDelete.setContentAreaFilled(false);
+
+        getContentPane().setBackground(new java.awt.Color(41, 41, 41));
         showWallpaperDetail(fileGambar);
     } 
 
@@ -69,12 +89,12 @@ public class DetailFrame extends javax.swing.JFrame {
         jLabelUploaderName = new javax.swing.JLabel();
         jLabelCategory = new javax.swing.JLabel();
         jLabelDate = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
         jLabelDescription = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
         setMaximumSize(new java.awt.Dimension(0, 0));
+        setPreferredSize(new java.awt.Dimension(800, 800));
         setResizable(false);
 
         jLabelImage.setBackground(new java.awt.Color(255, 255, 255));
@@ -87,29 +107,49 @@ public class DetailFrame extends javax.swing.JFrame {
         jPanel2.setMaximumSize(new java.awt.Dimension(0, 0));
         jPanel2.setPreferredSize(new java.awt.Dimension(800, 165));
 
+        jButtonDownload.setBackground(new java.awt.Color(41, 41, 41));
+        jButtonDownload.setFont(new java.awt.Font("Microsoft YaHei", 1, 14)); // NOI18N
+        jButtonDownload.setForeground(new java.awt.Color(255, 255, 255));
         jButtonDownload.setText("Download");
+        jButtonDownload.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonDownload.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jButtonDownload.addActionListener(this::jButtonDownloadActionPerformed);
 
+        jButtonDelete.setBackground(new java.awt.Color(41, 41, 41));
+        jButtonDelete.setFont(new java.awt.Font("Microsoft YaHei", 1, 14)); // NOI18N
+        jButtonDelete.setForeground(new java.awt.Color(255, 255, 255));
         jButtonDelete.setText("Delete");
+        jButtonDelete.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonDelete.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jButtonDelete.addActionListener(this::jButtonDeleteActionPerformed);
 
+        jLabelImageTitle.setBackground(new java.awt.Color(255, 255, 255));
+        jLabelImageTitle.setFont(new java.awt.Font("Microsoft YaHei", 1, 24)); // NOI18N
         jLabelImageTitle.setForeground(new java.awt.Color(255, 255, 255));
         jLabelImageTitle.setText("image_nama");
 
+        jLabelUploaderName.setFont(new java.awt.Font("Microsoft YaHei", 0, 12)); // NOI18N
         jLabelUploaderName.setForeground(new java.awt.Color(255, 255, 255));
         jLabelUploaderName.setText("username");
+        jLabelUploaderName.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabelUploaderName.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabelUploaderNameMouseClicked(evt);
+            }
+        });
 
+        jLabelCategory.setFont(new java.awt.Font("Microsoft YaHei", 0, 12)); // NOI18N
         jLabelCategory.setForeground(new java.awt.Color(255, 255, 255));
         jLabelCategory.setText("category");
 
+        jLabelDate.setFont(new java.awt.Font("Microsoft YaHei", 0, 12)); // NOI18N
         jLabelDate.setForeground(new java.awt.Color(255, 255, 255));
         jLabelDate.setText("date");
 
-        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel4.setText("Description :");
-
+        jLabelDescription.setFont(new java.awt.Font("Microsoft YaHei", 0, 12)); // NOI18N
         jLabelDescription.setForeground(new java.awt.Color(255, 255, 255));
         jLabelDescription.setText("description text");
+        jLabelDescription.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -122,6 +162,7 @@ public class DetailFrame extends javax.swing.JFrame {
                     .addComponent(jLabelUploaderName)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(jLabelDate, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+<<<<<<< HEAD
                         .addComponent(jLabelCategory, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGap(122, 122, 122)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -132,30 +173,36 @@ public class DetailFrame extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jButtonDownload)
                 .addContainerGap(82, Short.MAX_VALUE))
+=======
+                        .addComponent(jLabelDescription, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 725, Short.MAX_VALUE)
+                        .addComponent(jLabelCategory, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButtonDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButtonDownload, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(33, 33, 33))
+>>>>>>> 69f0197a8e2cedb51892978802aa40f88d9214e4
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(13, 13, 13)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabelImageTitle)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jLabelImageTitle)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabelUploaderName, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabelDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addComponent(jLabelUploaderName, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jLabelCategory)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabelDate))
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jButtonDownload)
-                                .addComponent(jButtonDelete))
-                            .addGap(34, 34, 34)))
-                    .addComponent(jLabelDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 17, Short.MAX_VALUE))
+                .addComponent(jLabelDate, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabelCategory)
+                .addGap(26, 26, 26)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonDownload, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(26, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -165,15 +212,15 @@ public class DetailFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabelImage, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE))
+                    .addComponent(jLabelImage, javax.swing.GroupLayout.DEFAULT_SIZE, 800, Short.MAX_VALUE))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jLabelImage, javax.swing.GroupLayout.PREFERRED_SIZE, 494, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jLabelImage, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -183,6 +230,7 @@ public class DetailFrame extends javax.swing.JFrame {
     private void jButtonDownloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDownloadActionPerformed
         // TODO add your handling code here:
         if (this.wallpaperInfo == null || this.wallpaperInfo.getImagePath() == null) {
+<<<<<<< HEAD
             JOptionPane.showMessageDialog(this, "Data gambar tidak valid! tidak ada di database", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -195,9 +243,22 @@ public class DetailFrame extends javax.swing.JFrame {
             Kemungkinan file telah terhapus atau dipindahkan secara manual.""", 
             "File Tidak Ditemukan", 
             JOptionPane.ERROR_MESSAGE);
+=======
+        JOptionPane.showMessageDialog(this, "Data gambar tidak valid!", "Error", JOptionPane.ERROR_MESSAGE);
+>>>>>>> 69f0197a8e2cedb51892978802aa40f88d9214e4
         return;
         }
-        
+
+        File sourceFile = new File("src/uploads/" + this.wallpaperInfo.getImagePath());
+
+        if (!sourceFile.exists()) {
+            JOptionPane.showMessageDialog(this, 
+                "File tidak ditemukan di folder uploads.", 
+                "File Tidak Ditemukan", 
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Pilih Lokasi Simpan Wallpaper");  
         
@@ -206,6 +267,7 @@ public class DetailFrame extends javax.swing.JFrame {
         
         String namaFileBersih = this.wallpaperInfo.getTitle().replaceAll("[^a-zA-Z0-9]", "_") + extension;            
         fileChooser.setSelectedFile(new File(namaFileBersih));
+<<<<<<< HEAD
         
         int pilihanUser = fileChooser.showSaveDialog(this);
         
@@ -215,8 +277,20 @@ public class DetailFrame extends javax.swing.JFrame {
             try {            
                 Files.copy(fileWallpaper.toPath(), fileTujuan.toPath(), StandardCopyOption.REPLACE_EXISTING);
                 JOptionPane.showMessageDialog(this, "Wallpaper berhasil diunduh!", "Sukses", JOptionPane.INFORMATION_MESSAGE);            
+=======
+        fileChooser.setDialogTitle("Pilih Lokasi Simpan Wallpaper");
+
+        int pilihanUser = fileChooser.showSaveDialog(this);
+
+        if (pilihanUser == JFileChooser.APPROVE_OPTION) {
+            File fileTujuan = fileChooser.getSelectedFile(); // ← PINDAH KE SINI, setelah dialog dibuka
+
+            try {
+                Files.copy(sourceFile.toPath(), fileTujuan.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                JOptionPane.showMessageDialog(this, "Wallpaper berhasil diunduh!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+>>>>>>> 69f0197a8e2cedb51892978802aa40f88d9214e4
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Gagal mengunduh Wallpaper: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Gagal mengunduh: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_jButtonDownloadActionPerformed
@@ -276,18 +350,48 @@ public class DetailFrame extends javax.swing.JFrame {
       
     }//GEN-LAST:event_jButtonDeleteActionPerformed
 
+    private void jLabelUploaderNameMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelUploaderNameMouseClicked
+    // TODO add your handling code here:
+      new PublicProfileFrame(wallpaperInfo.getUserId(), currentUserId, currentUsername).setVisible(true);
+    }//GEN-LAST:event_jLabelUploaderNameMouseClicked
+
     private void showWallpaperDetail(File fileGambar){
         
         int lebar = 800;
         int panjang = 500;
         
         if (wallpaperInfo != null) {
+<<<<<<< HEAD
             
             jLabelImageTitle.setText(wallpaperInfo.getTitle());
             jLabelUploaderName.setText("Uploaded By: " + GalleryProvider.getUsernameFromId(wallpaperInfo.getUserId()));
             jLabelCategory.setText(wallpaperInfo.getCategory());         
+=======
+            String uploader = getUsernameUploader(wallpaperInfo.getUserId());
+            String uploaderCapitalized = uploader.substring(0, 1).toUpperCase() + uploader.substring(1);
+            String title = wallpaperInfo.getTitle();
+            String[] words = title.split(" ");
+            StringBuilder capitalizedTitle = new StringBuilder();
+
+            for (String word : words) {
+                if (!word.isEmpty()) {
+                    capitalizedTitle.append(word.substring(0, 1).toUpperCase())
+                                    .append(word.substring(1).toLowerCase())
+                                    .append(" ");
+                }
+            }
+            String rawDate = wallpaperInfo.getTimeAdded().substring(0, wallpaperInfo.getTimeAdded().indexOf(' '));
+            java.time.LocalDate date = java.time.LocalDate.parse(rawDate);
+            java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter
+                .ofPattern("dd MMMM yyyy", new java.util.Locale("id", "ID"));
+            String formattedDate = date.format(formatter);
+
+            jLabelImageTitle.setText(capitalizedTitle.toString().trim());
+            jLabelUploaderName.setText("<html><b>Uploaded By:</b>&nbsp;&nbsp;&nbsp;&nbsp;" + uploaderCapitalized + "</html>");
+            jLabelCategory.setText("<html><b>Category:</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + wallpaperInfo.getCategory() + "</html>");         
+>>>>>>> 69f0197a8e2cedb51892978802aa40f88d9214e4
             jLabelDescription.setText(wallpaperInfo.getDescription());
-            jLabelDate.setText("Created At: " + wallpaperInfo.getTimeAdded().substring(0,wallpaperInfo.getTimeAdded().indexOf(' ')));
+            jLabelDate.setText("<html><b>Created At:</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + formattedDate + "</html>");
            
             try {
                 
@@ -320,7 +424,6 @@ public class DetailFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonDelete;
     private javax.swing.JButton jButtonDownload;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabelCategory;
     private javax.swing.JLabel jLabelDate;
     private javax.swing.JLabel jLabelDescription;
