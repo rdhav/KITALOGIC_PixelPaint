@@ -133,11 +133,7 @@ public class WallpaperCard extends javax.swing.JPanel {
 
         overlayBackground.add(jLabelImageTitle);
         overlayBackground.add(jLabelKategori);
-<<<<<<< HEAD
-        overlayBackground.add(gap);
-=======
         overlayBackground.add(gap); 
->>>>>>> 69f0197a8e2cedb51892978802aa40f88d9214e4
         overlayBackground.add(jLabelAuthor);
 
         MouseAdapter hoverListener = new MouseAdapter() {

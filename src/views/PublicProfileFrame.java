@@ -27,14 +27,11 @@ public class PublicProfileFrame extends javax.swing.JFrame {
     
     private final int profileUserId;
     private final int currentUserId;
-    private final String currentUsername;
     
-    public PublicProfileFrame(int profileUserId, int currentUserId, String currentUsername) {
+    public PublicProfileFrame(int profileUserId, int currentUserId) {
         this.profileUserId = profileUserId;
         this.currentUserId = currentUserId;
-        this.currentUsername = currentUsername;
 
-        
         initComponents();
         setResizable(false);
         setLocationRelativeTo(null);
@@ -82,7 +79,7 @@ public class PublicProfileFrame extends javax.swing.JFrame {
         List<Wallpaper> daftarWallpaper = gallery.getGalleryWallpaper(profileUserId);
 
         for (Wallpaper wp : daftarWallpaper) {
-            WallpaperCard card = new WallpaperCard(wp, currentUserId, currentUsername, this);
+            WallpaperCard card = new WallpaperCard(wp, currentUserId, this);
             jPanelHomeGallery.add(card);
         }
 
@@ -260,7 +257,7 @@ public class PublicProfileFrame extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new PublicProfileFrame(2, -1, "Guest").setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new PublicProfileFrame(2, -1).setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

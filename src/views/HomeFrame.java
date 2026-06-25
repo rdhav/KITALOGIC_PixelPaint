@@ -17,8 +17,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.BorderFactory;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import models.Wallpaper;
@@ -334,7 +336,7 @@ public class HomeFrame extends javax.swing.JFrame {
         
         String title = JOptionPane.showInputDialog(this, "Masukkan Judul Wallpaper:");
         String description = JOptionPane.showInputDialog(this, "(Boleh di skip!)Masukkan Deskripsi:");
-        String category = JOptionPane.showInputDialog(this, "Masukkan Kategori :");
+        String category = getValidatedCategoryFromUser();
         
         if (title == null || category == null) {
             JOptionPane.showMessageDialog(this, "Wallpaper harus diberikan title dan Category!!");
@@ -358,6 +360,7 @@ public class HomeFrame extends javax.swing.JFrame {
                 AddWallapaperPstmt.executeUpdate();
                 
                 JOptionPane.showMessageDialog(this, "Wallpaper berhasil diunggah!");
+                getWallpaperCategoryList();
                 ShowWallpaperGalleryAll();
             }
             
@@ -409,7 +412,92 @@ public class HomeFrame extends javax.swing.JFrame {
         ShowWallpaperGalleryAll();
     }//GEN-LAST:event_jButtonResetActionPerformed
     
-    private void getWallpaperCategoryList () {        
+    private String getValidatedCategoryFromUser() {
+           
+        ArrayList<String> listCategory = new ArrayList<>();
+        
+        for (int i = 0; i < jComboBoxCategory.getItemCount(); i++) {
+            Object item = jComboBoxCategory.getItemAt(i);
+            if (item != null) {
+                listCategory.add(item.toString());
+            }
+        }
+
+        String optionCategoryBaru = "+ Tambah Kategori Baru...";
+        listCategory.add(optionCategoryBaru);
+        
+        JComboBox <String> comboBoxInputCategory = new JComboBox<>(listCategory.toArray(new String[0]));
+        
+        //Lamda Function
+        comboBoxInputCategory.addActionListener(e -> {
+            
+            String result;          
+            String selectedCategory = (String) comboBoxInputCategory.getSelectedItem();
+            
+            if (selectedCategory.equals(optionCategoryBaru)) {
+
+                String categoryBaru = JOptionPane.showInputDialog(this, "Masukkan Nama Kategori Baru:");
+
+                if (categoryBaru == null || categoryBaru.trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Kategori baru tidak boleh kosong!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+                    comboBoxInputCategory.setSelectedIndex(0);
+                    return;
+                }
+
+                String input = categoryBaru.toLowerCase().replaceAll("\\s+", "");
+                String categoryCheck = "";
+                boolean isDuplicate = false;
+
+                for (String exisingCategory : listCategory) {                
+                    if (!exisingCategory.equals(optionCategoryBaru)){
+                        
+                        String category = exisingCategory.toLowerCase().replaceAll("\\s+", "");
+                        if (input.equals(category)) {
+                            isDuplicate = true;
+                            categoryCheck = exisingCategory;
+                            break;
+                        }
+                        
+                    }          
+                }
+
+                if (isDuplicate) {
+                    JOptionPane.showMessageDialog(this, 
+                        "Kategori " + categoryBaru + " sama dengan " + categoryCheck + " yang sudah ada.\n" +
+                        "Silakan pilih langsung '" + categoryCheck + "' pada Dropdown!", 
+                        "Kategori Sudah Ada", JOptionPane.WARNING_MESSAGE);
+                }
+                
+                result = (Character.toUpperCase(input.charAt(0)) + input.substring(1)).trim();
+                int indexCategoryBaru = comboBoxInputCategory.getItemCount() - 1 ;               
+                comboBoxInputCategory.insertItemAt(result,indexCategoryBaru);
+                comboBoxInputCategory.setSelectedItem(result);
+            }                      
+        });
+
+        int dialogConfirm = JOptionPane.showConfirmDialog(
+            this, 
+            comboBoxInputCategory, 
+            "Pilih Kategori Wallpaper", 
+            JOptionPane.OK_CANCEL_OPTION, 
+            JOptionPane.PLAIN_MESSAGE
+        );
+        
+        if (dialogConfirm == JOptionPane.OK_OPTION) {
+            String finalSelection = (String) comboBoxInputCategory.getSelectedItem();
+
+            if (optionCategoryBaru.equals(finalSelection)) {
+                JOptionPane.showMessageDialog(this, "Silakan pilih kategori yang valid!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+                return null;
+            }
+
+            return finalSelection.toLowerCase();
+        }
+
+        return null;    
+    }
+    
+    private void getWallpaperCategoryList() {        
         String getByCategorySQL = "SELECT DISTINCT LOWER(category) AS category_name FROM artworks";       
         try (Connection con = DBConnection.getConnection();
             PreparedStatement listCategory = con.prepareStatement(getByCategorySQL)) {
