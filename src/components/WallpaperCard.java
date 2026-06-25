@@ -7,6 +7,7 @@ import java.awt.*;
 import java.io.File;
 import views.DetailFrame;
 import java.awt.image.BufferedImage;
+import java.awt.event.MouseAdapter;
 
 public class WallpaperCard extends javax.swing.JPanel {
 
@@ -132,10 +133,10 @@ public class WallpaperCard extends javax.swing.JPanel {
 
         overlayBackground.add(jLabelImageTitle);
         overlayBackground.add(jLabelKategori);
-        overlayBackground.add(gap); // ← gap di antara keduanya
+        overlayBackground.add(gap);
         overlayBackground.add(jLabelAuthor);
 
-        java.awt.event.MouseAdapter hoverListener = new java.awt.event.MouseAdapter() {
+        MouseAdapter hoverListener = new MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 if (timer[0] != null) timer[0].stop();

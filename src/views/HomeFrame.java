@@ -406,7 +406,6 @@ public class HomeFrame extends javax.swing.JFrame {
 
     private void jButtonResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonResetActionPerformed
         // TODO add your handling code here:
-        jComboBoxCategory.setSelectedIndex(-1);
         ShowWallpaperGalleryAll();
     }//GEN-LAST:event_jButtonResetActionPerformed
     
@@ -419,8 +418,7 @@ public class HomeFrame extends javax.swing.JFrame {
             
             jComboBoxCategory.removeAllItems();
             
-            while (resListCategory.next()) {
-                
+            while (resListCategory.next()) {            
                 jComboBoxCategory.addItem(Character.toUpperCase(resListCategory.getString("category_name").charAt(0)) + resListCategory.getString("category_name").substring(1));
             }
             

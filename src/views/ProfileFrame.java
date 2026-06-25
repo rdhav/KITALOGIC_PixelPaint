@@ -20,6 +20,10 @@ import java.awt.*;
 import java.nio.file.StandardCopyOption;
 import models.WallpaperPrivate;
 import dao.UserDAO;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import javax.swing.BorderFactory;
+import javax.swing.JComboBox;
 /**
  *
  * @author Nice
@@ -586,7 +590,7 @@ public class ProfileFrame extends javax.swing.JFrame {
         
         String title = JOptionPane.showInputDialog(this, "Masukkan Judul Wallpaper:");
         String description = JOptionPane.showInputDialog(this, "(Boleh di skip!)Masukkan Deskripsi:");
-        String category = JOptionPane.showInputDialog(this, "Masukkan Kategori :");
+        String category = getValidatedCategoryFromUser();
         
         if (title == null || category == null) {
             JOptionPane.showMessageDialog(this, "Wallpaper harus diberikan title dan Category!!");
@@ -610,15 +614,16 @@ public class ProfileFrame extends javax.swing.JFrame {
                 AddWallapaperPstmt.executeUpdate();
                 
                 JOptionPane.showMessageDialog(this, "Wallpaper berhasil diunggah!");
+                getWallpaperCategoryList();
                 showGalleryWallpaperUser();
             }
             
-         catch (IOException | SQLException e) {
-             if (destinationFile.exists()) {
-                destinationFile.delete();
-            }
-            JOptionPane.showMessageDialog(this, "Gagal memproses unggahan: " + e.getMessage());
-        }       
+            catch (IOException | SQLException e) {
+                if (destinationFile.exists()) {
+                   destinationFile.delete();
+                }
+                JOptionPane.showMessageDialog(this, "Gagal memproses unggahan: " + e.getMessage());
+            }       
     }//GEN-LAST:event_uploadBtnActionPerformed
 
     private void logoutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutBtnActionPerformed
@@ -627,7 +632,7 @@ public class ProfileFrame extends javax.swing.JFrame {
 
     private void jComboBoxCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxCategoryActionPerformed
         // TODO add your handling code here:
-        String selectedCategory = (String) jComboBoxCategory.getSelectedItem();
+        String selectedCategory = (String)jComboBoxCategory.getSelectedItem();
 
         GalleryProvider gallery = new WallpaperPrivate();
         List<Wallpaper> daftarWallpaper =  gallery.getGalleryWallpaper(currentUserId);
@@ -646,10 +651,94 @@ public class ProfileFrame extends javax.swing.JFrame {
 
     private void jButtonResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonResetActionPerformed
         // TODO add your handling code here:
-        jComboBoxCategory.setSelectedIndex(-1);
         showGalleryWallpaperUser();
     }//GEN-LAST:event_jButtonResetActionPerformed
+   
+    private String getValidatedCategoryFromUser() {
+           
+        ArrayList<String> listCategory = new ArrayList<>();
+        
+        for (int i = 0; i < jComboBoxCategory.getItemCount(); i++) {
+            Object item = jComboBoxCategory.getItemAt(i);
+            if (item != null) {
+                listCategory.add(item.toString());
+            }
+        }
 
+        String optionCategoryBaru = "+ Tambah Kategori Baru...";
+        listCategory.add(optionCategoryBaru);
+        
+        JComboBox <String> comboBoxInputCategory = new JComboBox<>(listCategory.toArray(new String[0]));
+        
+        //Lamda Function
+        comboBoxInputCategory.addActionListener(e -> {
+            
+            String result = "";          
+            String selectedCategory = (String) comboBoxInputCategory.getSelectedItem();
+            
+            if (selectedCategory.equals(optionCategoryBaru)) {
+
+                String categoryBaru = JOptionPane.showInputDialog(this, "Masukkan Nama Kategori Baru:");
+
+                if (categoryBaru == null || categoryBaru.trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Kategori baru tidak boleh kosong!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+                    comboBoxInputCategory.setSelectedIndex(0);
+                    return;
+                }
+
+                String input = categoryBaru.toLowerCase().replaceAll("\\s+", "");
+                String categoryCheck = "";
+                boolean isDuplicate = false;
+
+                for (String exisingCategory : listCategory) {                
+                    if (!exisingCategory.equals(optionCategoryBaru)){
+                        
+                        String category = exisingCategory.toLowerCase().replaceAll("\\s+", "");
+                        if (input.equals(category)) {
+                            isDuplicate = true;
+                            categoryCheck = exisingCategory;
+                            break;
+                        }
+                        
+                    }          
+                }
+
+                if (isDuplicate) {
+                    JOptionPane.showMessageDialog(this, 
+                        "Kategori " + categoryBaru + " sama dengan " + categoryCheck + " yang sudah ada.\n" +
+                        "Silakan pilih langsung '" + categoryCheck + "' pada Dropdown!", 
+                        "Kategori Sudah Ada", JOptionPane.WARNING_MESSAGE);
+                }
+                
+                result = (Character.toUpperCase(input.charAt(0)) + input.substring(1)).trim();
+                int indexCategoryBaru = comboBoxInputCategory.getItemCount() - 1 ;               
+                comboBoxInputCategory.insertItemAt(result,indexCategoryBaru);
+                comboBoxInputCategory.setSelectedItem(result);
+            }                      
+        });
+
+        int dialogConfirm = JOptionPane.showConfirmDialog(
+            this, 
+            comboBoxInputCategory, 
+            "Pilih Kategori Wallpaper", 
+            JOptionPane.OK_CANCEL_OPTION, 
+            JOptionPane.PLAIN_MESSAGE
+        );
+        
+        if (dialogConfirm == JOptionPane.OK_OPTION) {
+            String finalSelection = (String) comboBoxInputCategory.getSelectedItem();
+
+            if (optionCategoryBaru.equals(finalSelection)) {
+                JOptionPane.showMessageDialog(this, "Silakan pilih kategori yang valid!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+                return null;
+            }
+
+            return finalSelection.toLowerCase();
+        }
+
+        return null;    
+    }
+    
     private void getWallpaperCategoryList () {        
         String getByCategorySQL = "SELECT DISTINCT LOWER(category) AS category_name FROM artworks";       
         try (Connection con = DBConnection.getConnection();
@@ -669,8 +758,8 @@ public class ProfileFrame extends javax.swing.JFrame {
     
     public void showGalleryWallpaperUser() {
         jPanelProfileGallery.removeAll();
-        jPanelProfileGallery.setLayout(new java.awt.GridLayout(0, 4, 15, 15));
-        jPanelProfileGallery.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 20, 50, 30));
+        jPanelProfileGallery.setLayout(new GridLayout(0, 4, 15, 15));
+        jPanelProfileGallery.setBorder(BorderFactory.createEmptyBorder(10, 20, 50, 30));
         
         //gallery private
         GalleryProvider gallery = new WallpaperPrivate();
@@ -716,7 +805,7 @@ public class ProfileFrame extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new ProfileFrame(2,"","").setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new ProfileFrame(3,"","").setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
