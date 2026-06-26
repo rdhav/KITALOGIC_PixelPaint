@@ -3,7 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package views;
-import com.mysql.cj.protocol.Resultset;
 import models.AdminUser;
 import interfaces.GalleryProvider;
 import java.awt.BorderLayout;
@@ -23,6 +22,8 @@ import models.Wallpaper;
 import database.DBConnection;
 import java.io.File;
 import java.util.ArrayList;
+import javax.swing.event.ListSelectionListener;
+import models.WallpaperPrivate;
 /**
  *
  * @author user
@@ -48,9 +49,9 @@ public class ManageFrame extends javax.swing.JFrame {
         setLocationRelativeTo(null);
 
         loadUserData();
+        
         showWallpaperGalleryAll(); 
     }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -64,6 +65,7 @@ public class ManageFrame extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableUsers = new javax.swing.JTable();
         jButtonDeleteUser = new javax.swing.JButton();
+        jButtonRefresh = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         logoutBtn = new javax.swing.JButton();
         jScrollPanePublicWallpaperGallery = new javax.swing.JScrollPane();
@@ -83,10 +85,23 @@ public class ManageFrame extends javax.swing.JFrame {
 
             }
         ));
+        jTableUsers.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableUsersMouseClicked(evt);
+            }
+        });
+        jTableUsers.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTableUsersKeyReleased(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTableUsers);
 
         jButtonDeleteUser.setText("Delete");
         jButtonDeleteUser.addActionListener(this::jButtonDeleteUserActionPerformed);
+
+        jButtonRefresh.setText("Refresh");
+        jButtonRefresh.addActionListener(this::jButtonRefreshActionPerformed);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -94,9 +109,11 @@ public class ManageFrame extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(36, 36, 36)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 725, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(35, 35, 35)
-                .addComponent(jButtonDeleteUser)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 742, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButtonDeleteUser)
+                    .addComponent(jButtonRefresh))
                 .addContainerGap(49, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -104,7 +121,10 @@ public class ManageFrame extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(15, 15, 15)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButtonDeleteUser)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jButtonDeleteUser)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButtonRefresh))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(15, 15, 15))
         );
@@ -198,6 +218,7 @@ public class ManageFrame extends javax.swing.JFrame {
             
         if (confirm == JOptionPane.YES_OPTION) {
             
+            //Mengambil semua nama file wallpaper user dalam folder uploads.
             List<String> listWallpaperToDelete = new ArrayList<>();            
             String getImagePathSQL = "SELECT image_path FROM artworks where user_id = ?";
           
@@ -216,6 +237,7 @@ public class ManageFrame extends javax.swing.JFrame {
                 return;
             }
             
+            //Delete user dari databse dan semua wallpaper dari folder uploads.
             String deleteUserSQL = "DELETE FROM users WHERE id = ?";
             
             try (Connection con = DBConnection.getConnection();
@@ -252,6 +274,31 @@ public class ManageFrame extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_logoutBtnActionPerformed
 
+    private void jButtonRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRefreshActionPerformed
+        // TODO add your handling code here:
+        showWallpaperGalleryAll();
+    }//GEN-LAST:event_jButtonRefreshActionPerformed
+
+    private void jTableUsersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableUsersMouseClicked
+        // TODO add your handling code here:
+        int selectedRow = jTableUsers.getSelectedRow();        
+        if (selectedRow != -1) {                   
+            int selectedUserId = (int) jTableUsers.getValueAt(selectedRow, 0);
+            showWallpaperGalleryUser(selectedUserId);
+        }  
+    }//GEN-LAST:event_jTableUsersMouseClicked
+
+    private void jTableUsersKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTableUsersKeyReleased
+        // TODO add your handling code here:
+        if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_UP || evt.getKeyCode() == java.awt.event.KeyEvent.VK_DOWN) {
+            int selectedRow = jTableUsers.getSelectedRow();
+            if (selectedRow != -1) {
+                int selectedUserId = (int) jTableUsers.getValueAt(selectedRow, 0);
+                showWallpaperGalleryUser(selectedUserId);
+            }
+        }
+    }//GEN-LAST:event_jTableUsersKeyReleased
+
     private void loadUserData() {
         DefaultTableModel model = (DefaultTableModel) jTableUsers.getModel();
         model.setRowCount(0);
@@ -283,6 +330,35 @@ public class ManageFrame extends javax.swing.JFrame {
         }
     }
     
+    public void showWallpaperGalleryUser(int idSelectedUser) {       
+        jPanelHomeGallery.removeAll();
+        jPanelHomeGallery.setLayout(new GridLayout(0, 4, 10, 15));
+        jPanelHomeGallery.setBorder(BorderFactory.createEmptyBorder(10, 20, 50, 15));
+        
+        //gallery private
+        GalleryProvider gallery = new WallpaperPrivate();        
+        List<Wallpaper> daftarWallpaper =  gallery.getGalleryWallpaper(idSelectedUser);
+ 
+        for (Wallpaper wp : daftarWallpaper) {
+            WallpaperCard card = new WallpaperCard(wp, adminUser.getId(), this);
+            jPanelHomeGallery.add(card);
+        }
+        
+        JPanel wrapper = new JPanel(new BorderLayout());        
+        wrapper.setBackground(jPanelHomeGallery.getBackground());
+        wrapper.add(jPanelHomeGallery, BorderLayout.NORTH);
+        
+        jScrollPanePublicWallpaperGallery.setViewportView(wrapper);
+        jScrollPanePublicWallpaperGallery.setVerticalScrollBarPolicy(javax.swing.JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        jScrollPanePublicWallpaperGallery.setHorizontalScrollBarPolicy(javax.swing.JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPanePublicWallpaperGallery.getVerticalScrollBar().setUnitIncrement(20);
+
+        wrapper.revalidate();        
+        wrapper.repaint();      
+        jPanelHomeGallery.revalidate();
+        jPanelHomeGallery.repaint();         
+    }
+    
     public void showWallpaperGalleryAll() {       
         jPanelHomeGallery.removeAll();
         jPanelHomeGallery.setLayout(new GridLayout(0, 4, 10, 15));
@@ -311,6 +387,7 @@ public class ManageFrame extends javax.swing.JFrame {
         jPanelHomeGallery.revalidate();
         jPanelHomeGallery.repaint();         
     }
+    
     
     /**
      * @param args the command line arguments
@@ -342,6 +419,7 @@ public class ManageFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonDeleteUser;
+    private javax.swing.JButton jButtonRefresh;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanelHomeGallery;
