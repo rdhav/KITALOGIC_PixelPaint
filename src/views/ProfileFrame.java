@@ -772,7 +772,7 @@ public class ProfileFrame extends javax.swing.JFrame {
         List<Wallpaper> daftarWallpaper = gallery.getGalleryWallpaper(currentUserId);
 
         for (Wallpaper wp : daftarWallpaper) {
-            WallpaperCard card = new WallpaperCard(wp, currentUserId, this); 
+            WallpaperCard card = new WallpaperCard(wp, currentUserId, ProfileFrame.this); 
             jPanelProfileGallery.add(card);
         }
         

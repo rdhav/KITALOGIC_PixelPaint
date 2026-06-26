@@ -23,8 +23,7 @@ import java.sql.*;
  */
 public class DetailFrame extends javax.swing.JFrame {
 
-    private static final java.util.logging.Logger logger = java.util.logging.Logger
-            .getLogger(DetailFrame.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(DetailFrame.class.getName());
 
     /**
      * Creates new form DetailFrame
@@ -42,17 +41,18 @@ public class DetailFrame extends javax.swing.JFrame {
         initComponents();
         this.setTitle(wallpaperInfo.getTitle());
 
+        boolean isAdmin = (mainFrame instanceof ManageFrame) && currentUserId == 1;
+        boolean isUser  = (mainFrame instanceof ProfileFrame) && currentUserId == wallpaperInfo.getUserId();   
         boolean isGuest = (currentUserId == -1);
-        if (isGuest) {
+        
+        if (isGuest) {          
             jButtonDelete.setVisible(false);
             jButtonDownload.setVisible(true);
             jButtonDownload.setPreferredSize(new java.awt.Dimension(762, 40));
-
         } else {
             jButtonDownload.setVisible(true);
             jButtonDownload.setPreferredSize(new java.awt.Dimension(382, 40));
-
-            if (this.mainFrame instanceof ProfileFrame && currentUserId == wallpaperInfo.getUserId()) {
+            if (isUser || isAdmin) {
                 jButtonDelete.setVisible(true);
                 jButtonDelete.setPreferredSize(new java.awt.Dimension(378, 40));
             } else {
@@ -66,6 +66,8 @@ public class DetailFrame extends javax.swing.JFrame {
 
         getContentPane().setBackground(new java.awt.Color(41, 41, 41));
         showWallpaperDetail(fileGambar);
+        this.revalidate();
+        this.repaint();
     }
 
     /**
@@ -299,7 +301,9 @@ public class DetailFrame extends javax.swing.JFrame {
 
                 if (this.mainFrame != null) {
                     this.mainFrame.setVisible(true);
-                    ((ProfileFrame) this.mainFrame).showGalleryWallpaperUser();
+                    if (this.mainFrame instanceof ProfileFrame profileFrame)profileFrame.showGalleryWallpaperUser();
+                    else if(this.mainFrame instanceof ManageFrame manageFrame)manageFrame.showWallpaperGalleryAll();
+                     
                 }
 
             } else {
