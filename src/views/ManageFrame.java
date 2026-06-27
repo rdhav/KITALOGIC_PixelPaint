@@ -51,6 +51,10 @@ public class ManageFrame extends javax.swing.JFrame {
         loadUserData();
         
         showWallpaperGalleryAll(); 
+        
+        jButtonDeleteUser.setContentAreaFilled(false);
+        jButtonRefresh.setContentAreaFilled(false);
+        
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -68,6 +72,7 @@ public class ManageFrame extends javax.swing.JFrame {
         jButtonRefresh = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         logoutBtn = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
         jScrollPanePublicWallpaperGallery = new javax.swing.JScrollPane();
         jPanelHomeGallery = new javax.swing.JPanel();
 
@@ -77,6 +82,10 @@ public class ManageFrame extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(41, 41, 41));
 
+        jTableUsers.setBackground(new java.awt.Color(41, 41, 41));
+        jTableUsers.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jTableUsers.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jTableUsers.setForeground(new java.awt.Color(255, 255, 255));
         jTableUsers.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -85,6 +94,12 @@ public class ManageFrame extends javax.swing.JFrame {
 
             }
         ));
+        jTableUsers.setGridColor(new java.awt.Color(41, 41, 41));
+        jTableUsers.setSelectionBackground(new java.awt.Color(255, 255, 255));
+        jTableUsers.setSelectionForeground(new java.awt.Color(41, 41, 41));
+        jTableUsers.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jTableUsers.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jTableUsers.getTableHeader().setResizingAllowed(false);
         jTableUsers.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTableUsersMouseClicked(evt);
@@ -97,10 +112,20 @@ public class ManageFrame extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jTableUsers);
 
+        jButtonDeleteUser.setBackground(new java.awt.Color(204, 0, 0));
+        jButtonDeleteUser.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jButtonDeleteUser.setForeground(new java.awt.Color(255, 255, 255));
         jButtonDeleteUser.setText("Delete");
+        jButtonDeleteUser.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonDeleteUser.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jButtonDeleteUser.addActionListener(this::jButtonDeleteUserActionPerformed);
 
+        jButtonRefresh.setBackground(new java.awt.Color(0, 204, 51));
+        jButtonRefresh.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jButtonRefresh.setForeground(new java.awt.Color(255, 255, 255));
         jButtonRefresh.setText("Refresh");
+        jButtonRefresh.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonRefresh.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jButtonRefresh.addActionListener(this::jButtonRefreshActionPerformed);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -109,23 +134,23 @@ public class ManageFrame extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(36, 36, 36)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 742, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 885, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButtonRefresh)
-                    .addComponent(jButtonDeleteUser, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(41, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButtonDeleteUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButtonRefresh, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE))
+                .addGap(32, 32, 32))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(15, 15, 15)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButtonDeleteUser)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButtonRefresh))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jButtonDeleteUser, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButtonRefresh, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGap(15, 15, 15))
         );
 
@@ -142,21 +167,30 @@ public class ManageFrame extends javax.swing.JFrame {
         logoutBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         logoutBtn.addActionListener(this::logoutBtnActionPerformed);
 
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/logoPixelPaint.png"))); // NOI18N
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(38, 38, 38)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(logoutBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(26, Short.MAX_VALUE)
-                .addComponent(logoutBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(24, 24, 24))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addComponent(jLabel1))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addComponent(logoutBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         jScrollPanePublicWallpaperGallery.setBackground(new java.awt.Color(41, 41, 41));
@@ -300,21 +334,79 @@ public class ManageFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jTableUsersKeyReleased
 
     private void loadUserData() {
-        DefaultTableModel model = (DefaultTableModel) jTableUsers.getModel();
-        model.setRowCount(0);
-        model.addColumn("id");
-        model.addColumn("username");
-        model.addColumn("password");
-        model.addColumn("bio");
-        model.addColumn("role");
-        model.addColumn("created_at");
+        DefaultTableModel model = new DefaultTableModel(
+            new String[]{"ID", "Username", "Password", "Bio", "Role", "Created At"}, 0
+        ) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; 
+            }
+        };
+
+        jTableUsers.setModel(model); 
+
+        jTableUsers.setRowHeight(30);
+
+        jTableUsers.getTableHeader().setDefaultRenderer(new javax.swing.table.DefaultTableCellRenderer() {
+       
+        @Override
+        public java.awt.Component getTableCellRendererComponent(
+                javax.swing.JTable table, Object value, boolean isSelected,
+                boolean hasFocus, int row, int column) {
+            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            setBackground(new java.awt.Color(41, 41, 41));
+            setForeground(new java.awt.Color(255, 255, 255));
+            setFont(new java.awt.Font("Segoe UI Black", java.awt.Font.PLAIN, 12));
+            setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+            setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 10, 0, 10));
+            setPreferredSize(new java.awt.Dimension(0, 25));
+            return this;
+        }
+    });
         
+        jTableUsers.setDefaultRenderer(Object.class, new javax.swing.table.DefaultTableCellRenderer() {
+            @Override
+            public java.awt.Component getTableCellRendererComponent(
+                    javax.swing.JTable table, Object value, boolean isSelected,
+                    boolean hasFocus, int row, int column) {
+                super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+                if (isSelected) {
+                    setBackground(new java.awt.Color(70, 70, 70)); 
+                    setForeground(new java.awt.Color(255, 255, 255));
+                } else {
+                    setBackground(new java.awt.Color(41, 41, 41));
+                    setForeground(new java.awt.Color(255, 255, 255));
+                }
+
+                setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 10, 0, 10));
+                return this;
+            }
+        });
+        jTableUsers.getColumnModel().getColumn(2).setMinWidth(0);
+        jTableUsers.getColumnModel().getColumn(2).setMaxWidth(0);
+        jTableUsers.getColumnModel().getColumn(2).setWidth(0);
+
+        jTableUsers.getColumnModel().getColumn(0).setPreferredWidth(50);   
+        jTableUsers.getColumnModel().getColumn(1).setPreferredWidth(150); 
+        jTableUsers.getColumnModel().getColumn(3).setPreferredWidth(250); 
+        jTableUsers.getColumnModel().getColumn(4).setPreferredWidth(80);   
+        jTableUsers.getColumnModel().getColumn(5).setPreferredWidth(180);  
+
+        jScrollPane1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(60, 60, 60), 1));
+        jScrollPane1.getViewport().setBackground(new java.awt.Color(41, 41, 41));
+        
+        jScrollPane1.getVerticalScrollBar().setPreferredSize(new java.awt.Dimension(0, 0));
+        jScrollPane1.getHorizontalScrollBar().setPreferredSize(new java.awt.Dimension(0, 0));
+        jScrollPane1.getVerticalScrollBar().setUnitIncrement(16);
+        jScrollPane1.setWheelScrollingEnabled(true);
+
         String sql = "SELECT id, username, password, bio, role, created_at FROM users";
-        
+
         try (Connection con = DBConnection.getConnection();
              PreparedStatement listUsers = con.prepareStatement(sql);
              ResultSet rs = listUsers.executeQuery()) {
-             
+
             while (rs.next()) {
                 model.addRow(new Object[]{
                     rs.getInt("id"),
@@ -333,7 +425,7 @@ public class ManageFrame extends javax.swing.JFrame {
     public void showWallpaperGalleryUser(int idSelectedUser) {       
         jPanelHomeGallery.removeAll();
         jPanelHomeGallery.setLayout(new GridLayout(0, 4, 10, 15));
-        jPanelHomeGallery.setBorder(BorderFactory.createEmptyBorder(10, 20, 50, 15));
+        jPanelHomeGallery.setBorder(BorderFactory.createEmptyBorder(10, 20, 100, 15));
         
         //gallery private
         GalleryProvider gallery = new WallpaperPrivate();        
@@ -362,7 +454,7 @@ public class ManageFrame extends javax.swing.JFrame {
     public void showWallpaperGalleryAll() {       
         jPanelHomeGallery.removeAll();
         jPanelHomeGallery.setLayout(new GridLayout(0, 4, 10, 15));
-        jPanelHomeGallery.setBorder(BorderFactory.createEmptyBorder(10, 20, 50, 15));
+        jPanelHomeGallery.setBorder(BorderFactory.createEmptyBorder(10, 20, 100, 15));
         
         //gallery public
         GalleryProvider gallery = new WallpaperPublic();        
@@ -420,6 +512,7 @@ public class ManageFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonDeleteUser;
     private javax.swing.JButton jButtonRefresh;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanelHomeGallery;
