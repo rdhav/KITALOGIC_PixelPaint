@@ -17,8 +17,8 @@ public class WallpaperPrivate extends Wallpaper implements GalleryProvider{
     
     public WallpaperPrivate(){super();}
     
-    public WallpaperPrivate(int id, String title, String category, String imagePath, String description, int userId,String timeAdded) {
-     super(id, title, category, imagePath, description,userId,timeAdded);
+    public WallpaperPrivate(int id, String title, String category, String imagePath, String description, int userId,String timeAdded,String timeUpdated) {
+        super(id, title, category, imagePath, description,userId,timeAdded,timeUpdated);
     }
     
     @Override
@@ -43,7 +43,8 @@ public class WallpaperPrivate extends Wallpaper implements GalleryProvider{
                         rs.getString("image_path"),
                         rs.getString("description"),
                         rs.getInt("user_id"),
-                        rs.getString("created_at")
+                        rs.getString("created_at"),
+                        rs.getString("updated_at")
                     );
                     list.add(wp);
                 }    

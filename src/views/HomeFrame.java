@@ -434,15 +434,15 @@ public class HomeFrame extends javax.swing.JFrame {
             
             if (selectedCategory.equals(optionCategoryBaru)) {
 
-                String categoryBaru = JOptionPane.showInputDialog(this, "Masukkan Nama Kategori Baru:");
+                String newCategory = JOptionPane.showInputDialog(this, "Masukkan Nama Kategori Baru:");
 
-                if (categoryBaru == null || categoryBaru.trim().isEmpty()) {
+                if (newCategory == null || newCategory.trim().isEmpty()) {
                     JOptionPane.showMessageDialog(this, "Kategori baru tidak boleh kosong!", "Peringatan", JOptionPane.WARNING_MESSAGE);
                     comboBoxInputCategory.setSelectedIndex(0);
                     return;
                 }
 
-                String input = categoryBaru.toLowerCase().replaceAll("\\s+", "");
+                String input = newCategory.toLowerCase().replaceAll("\\s+", "");
                 String categoryCheck = "";
                 boolean isDuplicate = false;
 
@@ -461,7 +461,7 @@ public class HomeFrame extends javax.swing.JFrame {
 
                 if (isDuplicate) {
                     JOptionPane.showMessageDialog(this, 
-                        "Kategori " + categoryBaru + " sama dengan " + categoryCheck + " yang sudah ada.\n" +
+                        "Kategori " + newCategory + " sama dengan " + categoryCheck + " yang sudah ada.\n" +
                         "Silakan pilih langsung '" + categoryCheck + "' pada Dropdown!", 
                         "Kategori Sudah Ada", JOptionPane.WARNING_MESSAGE);
                 }

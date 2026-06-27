@@ -34,7 +34,8 @@ CREATE TABLE `artworks` (
   `category` varchar(50) DEFAULT NULL,
   `image_path` varchar(255) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -44,12 +45,12 @@ CREATE TABLE `artworks` (
 INSERT INTO artworks 
 (id, title, description, category, image_path, user_id, created_at)
 VALUES
-(1, 'Sunset Over Mountains', 'Lukisan digital pemandangan matahari terbenam', 'Landscape', '2_1781556972811_sunset.jpg', 2, '2026-06-12 10:12:05'),
-(2, 'Abstract Blue', 'Karya abstrak dengan dominasi warna biru', 'Abstract', '2_1781556972811_abstract_blue.jpg', 2, '2026-06-12 10:12:05'),
-(3, 'City at Night', 'Ilustrasi kota malam hari dengan lampu neon', 'Illustration', '3_1781556972811_city_night.jpg', 3, '2026-06-12 10:12:05'),
-(4, 'Forest Path', 'Jalan setapak di tengah hutan lebat', 'Landscape', '3_1781556972811_forest.jpg', 3, '2026-06-12 10:12:05'),
-(5, 'Pixel Cat', 'Kucing lucu dalam gaya pixel art', 'Pixel Art', '4_1781556972811_pixel_cat.jpg', 4, '2026-06-12 10:12:05'),
-(6, 'Retro Space', 'Tema luar angkasa bergaya retro 8-bit', 'Pixel Art', '4_1781556972811_retro_space.png', 4, '2026-06-12 10:12:05');
+(1, 'Sunset Over Mountains', 'Lukisan digital pemandangan matahari terbenam', 'landscape', '2_1781556972811_sunset.jpg', 2, '2026-06-12 10:12:05'),
+(2, 'Abstract Blue', 'Karya abstrak dengan dominasi warna biru', 'abstract', '2_1781556972811_abstract_blue.jpg', 2, '2026-06-12 10:12:05'),
+(3, 'City at Night', 'Ilustrasi kota malam hari dengan lampu neon', 'illustration', '3_1781556972811_city_night.jpg', 3, '2026-06-12 10:12:05'),
+(4, 'Forest Path', 'Jalan setapak di tengah hutan lebat', 'landscape', '3_1781556972811_forest.jpg', 3, '2026-06-12 10:12:05'),
+(5, 'Pixel Cat', 'Kucing lucu dalam gaya pixel art', 'pixel art', '4_1781556972811_pixel_cat.jpg', 4, '2026-06-12 10:12:05'),
+(6, 'Retro Space', 'Tema luar angkasa bergaya retro 8-bit', 'pixel art', '4_1781556972811_retro_space.png', 4, '2026-06-12 10:12:05');
 -- --------------------------------------------------------
 
 --
@@ -120,6 +121,9 @@ ALTER TABLE `artworks`
   ADD CONSTRAINT `artworks_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 COMMIT;
 
+
+ALTER TABLE `artworks` 
+MODIFY COLUMN `updated_at` TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
