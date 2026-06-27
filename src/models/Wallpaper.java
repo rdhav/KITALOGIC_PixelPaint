@@ -9,8 +9,7 @@ package models;
  * @author user
  */
 
-public class Wallpaper  {
-    
+public class Wallpaper  {   
     protected int id;
     protected String title;
     protected String category;
@@ -18,10 +17,11 @@ public class Wallpaper  {
     protected String description;
     protected int userId;
     protected String timeAdded;
+    protected String timeUpdated;
 
     public Wallpaper(){}
 
-    public Wallpaper(int id, String title, String category, String imagePath, String description, int userId,String timeAdded) {
+    public Wallpaper(int id, String title, String category, String imagePath, String description, int userId,String timeAdded,String timeUpdated) {
         this.id = id;
         this.title = title;
         this.category = category;
@@ -29,6 +29,7 @@ public class Wallpaper  {
         this.description = description;
         this.userId = userId;
         this.timeAdded = timeAdded;
+        this.timeUpdated = timeUpdated;
     }
 
     // --- GETTER AND SETTER (Mengontrol akses variabel beraliran enkapsulasi) ---
@@ -87,5 +88,12 @@ public class Wallpaper  {
     public void setTimeAdded(String timeAdded) {
         this.timeAdded = timeAdded;
     }
+   
+    public String getTimeUpdated() {
+        return timeUpdated;
+    }
     
+    public void setTimeUpdated(String timeUpdated) {
+        this.timeUpdated = timeUpdated;
+    }  
 }

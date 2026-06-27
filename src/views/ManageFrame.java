@@ -4,9 +4,29 @@
  */
 package views;
 import models.AdminUser;
+import interfaces.GalleryProvider;
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
+import models.WallpaperPublic;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import components.WallpaperCard;
+import models.Wallpaper;
+import database.DBConnection;
+import java.io.File;
+import java.util.ArrayList;
+import javax.swing.event.ListSelectionListener;
+import models.WallpaperPrivate;
 /**
  *
- * @author Nice
+ * @author user
  */
 public class ManageFrame extends javax.swing.JFrame {
     
@@ -16,10 +36,22 @@ public class ManageFrame extends javax.swing.JFrame {
      * Creates new form ManageFrame
      */
     public ManageFrame(AdminUser adminUser) {
-        initComponents();
         this.adminUser = adminUser;
-    }
+        
+        initComponents();
+        jScrollPanePublicWallpaperGallery.setBorder(null);
+        jScrollPanePublicWallpaperGallery.getVerticalScrollBar().setPreferredSize(new java.awt.Dimension(0, 0));
+        jScrollPanePublicWallpaperGallery.getHorizontalScrollBar().setPreferredSize(new java.awt.Dimension(0, 0));
+        jScrollPanePublicWallpaperGallery.getVerticalScrollBar().setUnitIncrement(20);
+        jScrollPanePublicWallpaperGallery.setWheelScrollingEnabled(true);
+        getContentPane().setBackground(new java.awt.Color(41, 41, 41));
+        setResizable(false);
+        setLocationRelativeTo(null);
 
+        loadUserData();
+        
+        showWallpaperGalleryAll(); 
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -29,22 +61,334 @@ public class ManageFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTableUsers = new javax.swing.JTable();
+        jButtonDeleteUser = new javax.swing.JButton();
+        jButtonRefresh = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        logoutBtn = new javax.swing.JButton();
+        jScrollPanePublicWallpaperGallery = new javax.swing.JScrollPane();
+        jPanelHomeGallery = new javax.swing.JPanel();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(1080, 660));
+        setResizable(false);
+
+        jPanel1.setBackground(new java.awt.Color(41, 41, 41));
+
+        jTableUsers.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+
+            }
+        ));
+        jTableUsers.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableUsersMouseClicked(evt);
+            }
+        });
+        jTableUsers.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTableUsersKeyReleased(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jTableUsers);
+
+        jButtonDeleteUser.setText("Delete");
+        jButtonDeleteUser.addActionListener(this::jButtonDeleteUserActionPerformed);
+
+        jButtonRefresh.setText("Refresh");
+        jButtonRefresh.addActionListener(this::jButtonRefreshActionPerformed);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(36, 36, 36)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 742, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButtonRefresh)
+                    .addComponent(jButtonDeleteUser, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(41, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jButtonDeleteUser)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButtonRefresh))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(15, 15, 15))
+        );
+
+        jPanel2.setBackground(new java.awt.Color(41, 41, 41));
+
+        logoutBtn.setBackground(new java.awt.Color(255, 51, 0));
+        logoutBtn.setFont(new java.awt.Font("Segoe UI Black", 0, 14)); // NOI18N
+        logoutBtn.setForeground(new java.awt.Color(255, 255, 255));
+        logoutBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lgin_con.png"))); // NOI18N
+        logoutBtn.setText("Logout");
+        logoutBtn.setAlignmentY(0.0F);
+        logoutBtn.setBorder(null);
+        logoutBtn.setBorderPainted(false);
+        logoutBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        logoutBtn.addActionListener(this::logoutBtnActionPerformed);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(logoutBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(26, Short.MAX_VALUE)
+                .addComponent(logoutBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(24, 24, 24))
+        );
+
+        jScrollPanePublicWallpaperGallery.setBackground(new java.awt.Color(41, 41, 41));
+        jScrollPanePublicWallpaperGallery.setAlignmentX(0.0F);
+        jScrollPanePublicWallpaperGallery.setAlignmentY(0.0F);
+        jScrollPanePublicWallpaperGallery.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jScrollPanePublicWallpaperGallery.setRowHeaderView(null);
+
+        jPanelHomeGallery.setBackground(new java.awt.Color(41, 41, 41));
+        jPanelHomeGallery.setAlignmentX(0.0F);
+        jPanelHomeGallery.setAlignmentY(0.0F);
+        jPanelHomeGallery.setLayout(new java.awt.GridLayout(1, 3));
+        jScrollPanePublicWallpaperGallery.setViewportView(jPanelHomeGallery);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addComponent(jScrollPanePublicWallpaperGallery)
+            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPanePublicWallpaperGallery, javax.swing.GroupLayout.PREFERRED_SIZE, 417, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButtonDeleteUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteUserActionPerformed
+        // TODO add your handling code here:
+        int selectedRow = jTableUsers.getSelectedRow();
+        
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Silakan pilih user yang ingin dihapus pada tabel!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        int idUser = (int) jTableUsers.getValueAt(selectedRow, 0);
+        String username = (String) jTableUsers.getValueAt(selectedRow, 1);
+
+        if (idUser == 1 || username.equalsIgnoreCase("admin")) {
+            JOptionPane.showMessageDialog(this, "User Admin utama tidak boleh dihapus!", "Akses Ditolak", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        int confirm = JOptionPane.showConfirmDialog(this, 
+            "Apakah Anda yakin ingin menghapus user " + username + "?\n" +
+            "PERINGATAN! semua wallpaper milik user ini akan ikut terhapus otomatis dari galeri!", 
+            "Konfirmasi Hapus User", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+            
+        if (confirm == JOptionPane.YES_OPTION) {
+            
+            //Mengambil semua nama file wallpaper user dalam folder uploads.
+            List<String> listWallpaperToDelete = new ArrayList<>();            
+            String getImagePathSQL = "SELECT image_path FROM artworks where user_id = ?";
+          
+            try (Connection con = DBConnection.getConnection();
+            PreparedStatement deleteFileStmt = con.prepareStatement(getImagePathSQL)) {
+
+                deleteFileStmt.setInt(1, idUser);
+                ResultSet rs = deleteFileStmt.executeQuery();
+                
+                while (rs.next()) {
+                    listWallpaperToDelete.add(rs.getString("image_path"));
+                }
+                
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(this, "Gagal mendeteksi berkas gambar user: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            //Delete user dari databse dan semua wallpaper dari folder uploads.
+            String deleteUserSQL = "DELETE FROM users WHERE id = ?";
+            
+            try (Connection con = DBConnection.getConnection();
+            PreparedStatement deleteStmt = con.prepareStatement(deleteUserSQL)) {
+                 
+                deleteStmt.setInt(1, idUser);
+                int rowsDeleted = deleteStmt.executeUpdate();
+                
+                if (rowsDeleted > 0) {
+                    
+                    String filePath = "src/uploads/";
+                    
+                    for (String imageName : listWallpaperToDelete) {
+                        File fileFullPath = new File(filePath + imageName);
+                        if (fileFullPath.exists()) {
+                            fileFullPath.delete();
+                        }
+                    }
+                    
+                    JOptionPane.showMessageDialog(this, "User " + username + " dan semua wallpapernya berhasil dihapus!");
+                    
+                    loadUserData();                   
+                    showWallpaperGalleryAll(); 
+                }
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(this, "Gagal menghapus user: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_jButtonDeleteUserActionPerformed
+
+    private void logoutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutBtnActionPerformed
+        // TODO add your handling code here:
+        new LoginFrame().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_logoutBtnActionPerformed
+
+    private void jButtonRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRefreshActionPerformed
+        // TODO add your handling code here:
+        showWallpaperGalleryAll();
+    }//GEN-LAST:event_jButtonRefreshActionPerformed
+
+    private void jTableUsersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableUsersMouseClicked
+        // TODO add your handling code here:
+        int selectedRow = jTableUsers.getSelectedRow();        
+        if (selectedRow != -1) {                   
+            int selectedUserId = (int) jTableUsers.getValueAt(selectedRow, 0);
+            showWallpaperGalleryUser(selectedUserId);
+        }  
+    }//GEN-LAST:event_jTableUsersMouseClicked
+
+    private void jTableUsersKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTableUsersKeyReleased
+        // TODO add your handling code here:
+        if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_UP || evt.getKeyCode() == java.awt.event.KeyEvent.VK_DOWN) {
+            int selectedRow = jTableUsers.getSelectedRow();
+            if (selectedRow != -1) {
+                int selectedUserId = (int) jTableUsers.getValueAt(selectedRow, 0);
+                showWallpaperGalleryUser(selectedUserId);
+            }
+        }
+    }//GEN-LAST:event_jTableUsersKeyReleased
+
+    private void loadUserData() {
+        DefaultTableModel model = (DefaultTableModel) jTableUsers.getModel();
+        model.setRowCount(0);
+        model.addColumn("id");
+        model.addColumn("username");
+        model.addColumn("password");
+        model.addColumn("bio");
+        model.addColumn("role");
+        model.addColumn("created_at");
+        
+        String sql = "SELECT id, username, password, bio, role, created_at FROM users";
+        
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement listUsers = con.prepareStatement(sql);
+             ResultSet rs = listUsers.executeQuery()) {
+             
+            while (rs.next()) {
+                model.addRow(new Object[]{
+                    rs.getInt("id"),
+                    rs.getString("username"),
+                    rs.getString("password"),
+                    rs.getString("bio"),
+                    rs.getString("role"),
+                    rs.getTimestamp("created_at")
+                });
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Gagal memuat data user: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    public void showWallpaperGalleryUser(int idSelectedUser) {       
+        jPanelHomeGallery.removeAll();
+        jPanelHomeGallery.setLayout(new GridLayout(0, 4, 10, 15));
+        jPanelHomeGallery.setBorder(BorderFactory.createEmptyBorder(10, 20, 50, 15));
+        
+        //gallery private
+        GalleryProvider gallery = new WallpaperPrivate();        
+        List<Wallpaper> daftarWallpaper =  gallery.getGalleryWallpaper(idSelectedUser);
+ 
+        for (Wallpaper wp : daftarWallpaper) {
+            WallpaperCard card = new WallpaperCard(wp, adminUser.getId(), this);
+            jPanelHomeGallery.add(card);
+        }
+        
+        JPanel wrapper = new JPanel(new BorderLayout());        
+        wrapper.setBackground(jPanelHomeGallery.getBackground());
+        wrapper.add(jPanelHomeGallery, BorderLayout.NORTH);
+        
+        jScrollPanePublicWallpaperGallery.setViewportView(wrapper);
+        jScrollPanePublicWallpaperGallery.setVerticalScrollBarPolicy(javax.swing.JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        jScrollPanePublicWallpaperGallery.setHorizontalScrollBarPolicy(javax.swing.JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPanePublicWallpaperGallery.getVerticalScrollBar().setUnitIncrement(20);
+
+        wrapper.revalidate();        
+        wrapper.repaint();      
+        jPanelHomeGallery.revalidate();
+        jPanelHomeGallery.repaint();         
+    }
+    
+    public void showWallpaperGalleryAll() {       
+        jPanelHomeGallery.removeAll();
+        jPanelHomeGallery.setLayout(new GridLayout(0, 4, 10, 15));
+        jPanelHomeGallery.setBorder(BorderFactory.createEmptyBorder(10, 20, 50, 15));
+        
+        //gallery public
+        GalleryProvider gallery = new WallpaperPublic();        
+        List<Wallpaper> daftarWallpaper =  gallery.getGalleryWallpaper(adminUser.getId());
+        
+        for (Wallpaper wp : daftarWallpaper) {
+            WallpaperCard card = new WallpaperCard(wp, adminUser.getId(), this);
+            jPanelHomeGallery.add(card);
+        }
+        
+        JPanel wrapper = new JPanel(new BorderLayout());        
+        wrapper.setBackground(jPanelHomeGallery.getBackground());
+        wrapper.add(jPanelHomeGallery, BorderLayout.NORTH);
+        
+        jScrollPanePublicWallpaperGallery.setViewportView(wrapper);
+        jScrollPanePublicWallpaperGallery.setVerticalScrollBarPolicy(javax.swing.JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        jScrollPanePublicWallpaperGallery.setHorizontalScrollBarPolicy(javax.swing.JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPanePublicWallpaperGallery.getVerticalScrollBar().setUnitIncrement(20);
+
+        wrapper.revalidate();        
+        wrapper.repaint();      
+        jPanelHomeGallery.revalidate();
+        jPanelHomeGallery.repaint();         
+    }
+    
+    
     /**
      * @param args the command line arguments
      */
@@ -67,12 +411,21 @@ public class ManageFrame extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> {
-        AdminUser dummyAdmin = new AdminUser(0, "TestAdmin", "1234", "Admin testing");
-        new ManageFrame(dummyAdmin).setVisible(true);
-});
-    }
+            java.awt.EventQueue.invokeLater(() -> {
+                AdminUser dummyAdmin = new AdminUser(1, "", "", "");
+                new ManageFrame(dummyAdmin).setVisible(true);
+            });
+    }    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonDeleteUser;
+    private javax.swing.JButton jButtonRefresh;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanelHomeGallery;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPanePublicWallpaperGallery;
+    private javax.swing.JTable jTableUsers;
+    private javax.swing.JButton logoutBtn;
     // End of variables declaration//GEN-END:variables
 }

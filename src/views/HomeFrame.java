@@ -75,7 +75,7 @@ public class HomeFrame extends javax.swing.JFrame {
         jLabelUsernameHomePage.setText(currentUsername.toUpperCase());  
         
         getWallpaperCategoryList();
-        ShowWallpaperGalleryAll();       
+        showWallpaperGalleryAll();       
     }
 
     /**
@@ -94,8 +94,6 @@ public class HomeFrame extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         profileBtn = new javax.swing.JButton();
         loginBtn = new javax.swing.JButton();
-        jScrollPanePublicWallpaperGallery = new javax.swing.JScrollPane();
-        jPanelHomeGallery = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -103,6 +101,8 @@ public class HomeFrame extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jComboBoxCategory = new javax.swing.JComboBox<>();
         jButtonReset = new javax.swing.JButton();
+        jScrollPanePublicWallpaperGallery = new javax.swing.JScrollPane();
+        jPanelHomeGallery = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Home Page");
@@ -158,7 +158,6 @@ public class HomeFrame extends javax.swing.JFrame {
                 loginBtnMouseClicked(evt);
             }
         });
-        loginBtn.addActionListener(this::loginBtnActionPerformed);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -209,18 +208,6 @@ public class HomeFrame extends javax.swing.JFrame {
                 .addGap(14, 14, 14))
         );
 
-        jScrollPanePublicWallpaperGallery.setBackground(new java.awt.Color(41, 41, 41));
-        jScrollPanePublicWallpaperGallery.setAlignmentX(0.0F);
-        jScrollPanePublicWallpaperGallery.setAlignmentY(0.0F);
-        jScrollPanePublicWallpaperGallery.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        jScrollPanePublicWallpaperGallery.setRowHeaderView(null);
-
-        jPanelHomeGallery.setBackground(new java.awt.Color(41, 41, 41));
-        jPanelHomeGallery.setAlignmentX(0.0F);
-        jPanelHomeGallery.setAlignmentY(0.0F);
-        jPanelHomeGallery.setLayout(new java.awt.GridLayout(1, 3));
-        jScrollPanePublicWallpaperGallery.setViewportView(jPanelHomeGallery);
-
         jPanel2.setBackground(new java.awt.Color(41, 41, 41));
 
         jLabel4.setFont(new java.awt.Font("Segoe UI Black", 1, 24)); // NOI18N
@@ -261,10 +248,8 @@ public class HomeFrame extends javax.swing.JFrame {
                 .addGap(28, 28, 28)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel5)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addGap(77, 77, 77)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(77, 80, Short.MAX_VALUE)
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jComboBoxCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -291,6 +276,18 @@ public class HomeFrame extends javax.swing.JFrame {
                 .addGap(0, 16, Short.MAX_VALUE))
         );
 
+        jScrollPanePublicWallpaperGallery.setBackground(new java.awt.Color(41, 41, 41));
+        jScrollPanePublicWallpaperGallery.setAlignmentX(0.0F);
+        jScrollPanePublicWallpaperGallery.setAlignmentY(0.0F);
+        jScrollPanePublicWallpaperGallery.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jScrollPanePublicWallpaperGallery.setRowHeaderView(null);
+
+        jPanelHomeGallery.setBackground(new java.awt.Color(41, 41, 41));
+        jPanelHomeGallery.setAlignmentX(0.0F);
+        jPanelHomeGallery.setAlignmentY(0.0F);
+        jPanelHomeGallery.setLayout(new java.awt.GridLayout(1, 3));
+        jScrollPanePublicWallpaperGallery.setViewportView(jPanelHomeGallery);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -307,7 +304,7 @@ public class HomeFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPanePublicWallpaperGallery, javax.swing.GroupLayout.DEFAULT_SIZE, 382, Short.MAX_VALUE))
+                .addComponent(jScrollPanePublicWallpaperGallery, javax.swing.GroupLayout.DEFAULT_SIZE, 398, Short.MAX_VALUE))
         );
 
         getAccessibleContext().setAccessibleName("PixelPaint Gallery");
@@ -334,12 +331,17 @@ public class HomeFrame extends javax.swing.JFrame {
             targetDirectory.mkdirs();
         }
         
-        String title = JOptionPane.showInputDialog(this, "Masukkan Judul Wallpaper:");
-        String description = JOptionPane.showInputDialog(this, "(Boleh di skip!)Masukkan Deskripsi:");
-        String category = getValidatedCategoryFromUser();
+        String title = JOptionPane.showInputDialog(this, "Masukkan Judul Wallpaper:");      
+        if (title == null) {
+            JOptionPane.showMessageDialog(this, "Wallpaper harus diberikan title!");
+            return;
+        }
         
-        if (title == null || category == null) {
-            JOptionPane.showMessageDialog(this, "Wallpaper harus diberikan title dan Category!!");
+        String description = JOptionPane.showInputDialog(this, "(Boleh di skip!) Masukkan Deskripsi:");
+        
+        String category = getValidatedCategoryFromUser();      
+        if (category == null) {
+            JOptionPane.showMessageDialog(this, "Wallpaper harus diberikan Category!");
             return;
         }
         
@@ -361,7 +363,7 @@ public class HomeFrame extends javax.swing.JFrame {
                 
                 JOptionPane.showMessageDialog(this, "Wallpaper berhasil diunggah!");
                 getWallpaperCategoryList();
-                ShowWallpaperGalleryAll();
+                showWallpaperGalleryAll();
             }
             
          catch (IOException | SQLException e) {
@@ -371,10 +373,6 @@ public class HomeFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Gagal memproses unggahan: " + e.getMessage());
         }
     }//GEN-LAST:event_uploadBtnActionPerformed
-
-    private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_loginBtnActionPerformed
 
     private void loginBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginBtnMouseClicked
         // TODO add your handling code here:
@@ -409,7 +407,7 @@ public class HomeFrame extends javax.swing.JFrame {
 
     private void jButtonResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonResetActionPerformed
         // TODO add your handling code here:
-        ShowWallpaperGalleryAll();
+        showWallpaperGalleryAll();
     }//GEN-LAST:event_jButtonResetActionPerformed
     
     private String getValidatedCategoryFromUser() {
@@ -436,15 +434,15 @@ public class HomeFrame extends javax.swing.JFrame {
             
             if (selectedCategory.equals(optionCategoryBaru)) {
 
-                String categoryBaru = JOptionPane.showInputDialog(this, "Masukkan Nama Kategori Baru:");
+                String newCategory = JOptionPane.showInputDialog(this, "Masukkan Nama Kategori Baru:");
 
-                if (categoryBaru == null || categoryBaru.trim().isEmpty()) {
+                if (newCategory == null || newCategory.trim().isEmpty()) {
                     JOptionPane.showMessageDialog(this, "Kategori baru tidak boleh kosong!", "Peringatan", JOptionPane.WARNING_MESSAGE);
                     comboBoxInputCategory.setSelectedIndex(0);
                     return;
                 }
 
-                String input = categoryBaru.toLowerCase().replaceAll("\\s+", "");
+                String input = newCategory.toLowerCase().replaceAll("\\s+", "");
                 String categoryCheck = "";
                 boolean isDuplicate = false;
 
@@ -463,7 +461,7 @@ public class HomeFrame extends javax.swing.JFrame {
 
                 if (isDuplicate) {
                     JOptionPane.showMessageDialog(this, 
-                        "Kategori " + categoryBaru + " sama dengan " + categoryCheck + " yang sudah ada.\n" +
+                        "Kategori " + newCategory + " sama dengan " + categoryCheck + " yang sudah ada.\n" +
                         "Silakan pilih langsung '" + categoryCheck + "' pada Dropdown!", 
                         "Kategori Sudah Ada", JOptionPane.WARNING_MESSAGE);
                 }
@@ -502,8 +500,7 @@ public class HomeFrame extends javax.swing.JFrame {
         try (Connection con = DBConnection.getConnection();
             PreparedStatement listCategory = con.prepareStatement(getByCategorySQL)) {
             
-            ResultSet resListCategory= listCategory.executeQuery();
-            
+            ResultSet resListCategory = listCategory.executeQuery();          
             jComboBoxCategory.removeAllItems();
             
             while (resListCategory.next()) {            
@@ -515,7 +512,7 @@ public class HomeFrame extends javax.swing.JFrame {
         }       
     }
     
-    private void ShowWallpaperGalleryAll () {       
+    private void showWallpaperGalleryAll () {       
         jPanelHomeGallery.removeAll();
         jPanelHomeGallery.setLayout(new GridLayout(0, 4, 10, 15));
         jPanelHomeGallery.setBorder(BorderFactory.createEmptyBorder(10, 20, 50, 15));

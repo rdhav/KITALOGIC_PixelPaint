@@ -592,11 +592,16 @@ public class ProfileFrame extends javax.swing.JFrame {
         }
         
         String title = JOptionPane.showInputDialog(this, "Masukkan Judul Wallpaper:");
-        String description = JOptionPane.showInputDialog(this, "(Boleh di skip!)Masukkan Deskripsi:");
-        String category = getValidatedCategoryFromUser();
+        if (title == null) {
+            JOptionPane.showMessageDialog(this, "Wallpaper harus diberikan title!");
+            return;
+        }
         
-        if (title == null || category == null) {
-            JOptionPane.showMessageDialog(this, "Wallpaper harus diberikan title dan Category!!");
+        String description = JOptionPane.showInputDialog(this, "(Boleh di skip!)Masukkan Deskripsi:");
+        
+        String category = getValidatedCategoryFromUser();      
+        if (category == null) {
+            JOptionPane.showMessageDialog(this, "Wallpaper harus diberikan Category!");
             return;
         }
         
@@ -772,7 +777,7 @@ public class ProfileFrame extends javax.swing.JFrame {
         List<Wallpaper> daftarWallpaper = gallery.getGalleryWallpaper(currentUserId);
 
         for (Wallpaper wp : daftarWallpaper) {
-            WallpaperCard card = new WallpaperCard(wp, currentUserId, this); 
+            WallpaperCard card = new WallpaperCard(wp, currentUserId, ProfileFrame.this); 
             jPanelProfileGallery.add(card);
         }
         
