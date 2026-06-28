@@ -56,6 +56,7 @@ public class ManageFrame extends javax.swing.JFrame {
         jButtonRefresh.setContentAreaFilled(false);
         
     }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -73,6 +74,8 @@ public class ManageFrame extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         logoutBtn = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        usernameLabel = new javax.swing.JLabel();
+        bioLabel = new javax.swing.JLabel();
         jScrollPanePublicWallpaperGallery = new javax.swing.JScrollPane();
         jPanelHomeGallery = new javax.swing.JPanel();
 
@@ -169,28 +172,44 @@ public class ManageFrame extends javax.swing.JFrame {
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/logoPixelPaint.png"))); // NOI18N
 
+        usernameLabel.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        usernameLabel.setForeground(new java.awt.Color(255, 255, 255));
+        usernameLabel.setText("Danadyaksa_Rabbani123");
+
+        bioLabel.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
+        bioLabel.setForeground(new java.awt.Color(205, 205, 205));
+        bioLabel.setText("Always With Me 0_0");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addGap(38, 38, 38)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(28, 28, 28)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(usernameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 717, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(bioLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 594, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(75, 75, 75)
                 .addComponent(logoutBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(36, 36, 36)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(logoutBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(15, 15, 15)
-                        .addComponent(jLabel1))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(26, 26, 26)
-                        .addComponent(logoutBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(15, Short.MAX_VALUE))
+                        .addComponent(usernameLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(bioLabel)))
+                .addContainerGap(17, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addContainerGap())
         );
 
         jScrollPanePublicWallpaperGallery.setBackground(new java.awt.Color(41, 41, 41));
@@ -343,6 +362,9 @@ public class ManageFrame extends javax.swing.JFrame {
             }
         };
 
+        usernameLabel.setText(adminUser.getUsername().toUpperCase());
+        String bio = adminUser.getBio();
+        bioLabel.setText(bio != null && !bio.isEmpty() ? bio : "Administrator PixelPaint");
         jTableUsers.setModel(model); 
 
         jTableUsers.setRowHeight(30);
@@ -510,6 +532,7 @@ public class ManageFrame extends javax.swing.JFrame {
     }    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel bioLabel;
     private javax.swing.JButton jButtonDeleteUser;
     private javax.swing.JButton jButtonRefresh;
     private javax.swing.JLabel jLabel1;
@@ -520,5 +543,6 @@ public class ManageFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPanePublicWallpaperGallery;
     private javax.swing.JTable jTableUsers;
     private javax.swing.JButton logoutBtn;
+    private javax.swing.JLabel usernameLabel;
     // End of variables declaration//GEN-END:variables
 }

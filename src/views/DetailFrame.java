@@ -40,23 +40,24 @@ public class DetailFrame extends javax.swing.JFrame {
 
         initComponents();
         this.setTitle(wallpaperInfo.getTitle());
-
+        jButtonUpdate.setVisible(false);
         boolean isAdmin = (mainFrame instanceof ManageFrame) && currentUserId == 1;
         boolean isUser  = (mainFrame instanceof ProfileFrame) && currentUserId == wallpaperInfo.getUserId();   
         boolean isGuest = (currentUserId == -1);
         
-        if (isGuest) {   
-            jButtonUpdate.setVisible(false);
+        if (isGuest) {
             jButtonDelete.setVisible(false);
             jButtonDownload.setVisible(true);
             jButtonDownload.setPreferredSize(new java.awt.Dimension(762, 40));
         } else {
             jButtonDownload.setVisible(true);
             jButtonDownload.setPreferredSize(new java.awt.Dimension(382, 40));
-            if (isUser || isAdmin) {
-                if (isUser){
-                    jButtonUpdate.setVisible(false);
-                }               
+
+            if (isAdmin) {
+                jButtonUpdate.setVisible(true);  
+                jButtonDelete.setVisible(true);
+                jButtonDelete.setPreferredSize(new java.awt.Dimension(378, 40));
+            } else if (isUser) {
                 jButtonDelete.setVisible(true);
                 jButtonDelete.setPreferredSize(new java.awt.Dimension(378, 40));
             } else {
