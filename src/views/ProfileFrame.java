@@ -66,8 +66,9 @@ public class ProfileFrame extends javax.swing.JFrame {
             bio = (currentUser != null && currentUser.getBio() != null) ? currentUser.getBio() : "";
         }
         
-        jLabelBio.setText(bio);
         this.setTitle(this.currentUser.getDashboardTitle());
+        
+        jLabelBio.setText(bio);
         homeBtn.setContentAreaFilled(false);
         uploadBtn.setContentAreaFilled(false);
         
@@ -190,8 +191,8 @@ public class ProfileFrame extends javax.swing.JFrame {
                             .addComponent(jLabelName)
                             .addComponent(jLabel9)
                             .addComponent(jLabelBio))
-                        .addGap(22, 22, 22)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 438, Short.MAX_VALUE)
+                        .addGap(9, 9, 9)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 442, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(homeBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(logoutBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -591,13 +592,34 @@ public class ProfileFrame extends javax.swing.JFrame {
             targetDirectory.mkdirs();
         }
         
-        String title = JOptionPane.showInputDialog(this, "Masukkan Judul Wallpaper:");
-        if (title == null) {
-            JOptionPane.showMessageDialog(this, "Wallpaper harus diberikan title!");
-            return;
-        }
+        String title = "";
+                    
+            while(title.length() > 15 || title.isEmpty()) {
+                
+            title = JOptionPane.showInputDialog(this, "(15 karakter!) Masukkan Judul Wallpaper:");
+                
+                if (title.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Wallpaper harus diberikan title!");
+                } else if (title.length() > 15) {
+                    JOptionPane.showMessageDialog(this, "Wallpaper title terlalu panjang!");            
+                }   
+            }        
+        
         
         String description = JOptionPane.showInputDialog(this, "(Boleh di skip!)Masukkan Deskripsi:");
+        
+        if (!description.isEmpty()) {
+            
+            while (description.length() > 20) {
+                
+                if (description.length() > 20) {
+                    JOptionPane.showMessageDialog(this, "Wallpaper description terlalu panjang!");
+                }              
+                description = JOptionPane.showInputDialog(this, "(Boleh di skip!)Masukkan Deskripsi:");
+                
+            }        
+        }
+        
         
         String category = getValidatedCategoryFromUser();      
         if (category == null) {
