@@ -17,7 +17,7 @@ public class AdminUser extends User {
     // Overriding
     @Override
     public String getDashboardTitle() {
-        return "[ADMIN] Dashboard - " + super.getUsername(); // super method
+        return "Dashboard - " + super.getUsername(); // super method
     }
 
     public String getAdminWelcome() {

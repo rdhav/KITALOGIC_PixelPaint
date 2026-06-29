@@ -21,6 +21,13 @@ public class WallpaperCard extends javax.swing.JPanel {
     private static final int MAX_LEBAR = 245;
     private static final int MAX_TINGGI_GAMBAR = 250;
 
+    public WallpaperCard(Wallpaper wp, int currentUserId, JFrame mainFrame) {
+        this.wallpaperInfo = wp;
+        this.currentUserId = currentUserId;
+        this.mainFrame = mainFrame;
+        buildCard();
+    }
+    
     private Image scaleAndCrop(Image original, int targetW, int targetH) {
         BufferedImage bi = new BufferedImage(
             original.getWidth(null), original.getHeight(null), BufferedImage.TYPE_INT_ARGB
@@ -53,14 +60,6 @@ public class WallpaperCard extends javax.swing.JPanel {
         g2.dispose();
 
         return result;
-    }
-
-    // Constructor ketika user sudah login
-    public WallpaperCard(Wallpaper wp, int currentUserId, JFrame mainFrame) {
-        this.wallpaperInfo = wp;
-        this.currentUserId = currentUserId;
-        this.mainFrame = mainFrame;
-        buildCard();
     }
 
     private void buildCard() {

@@ -20,7 +20,6 @@ import java.awt.*;
 import java.nio.file.StandardCopyOption;
 import models.WallpaperPrivate;
 import dao.UserDAO;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
@@ -106,11 +105,9 @@ public class ProfileFrame extends javax.swing.JFrame {
         editUsernameField = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jCheckBox1 = new javax.swing.JCheckBox();
+        jCheckBoxShowPassword = new javax.swing.JCheckBox();
         editBtn = new javax.swing.JButton();
         editErrorLabel = new javax.swing.JLabel();
-        jScrollPanePrivateWallpaperGallery = new javax.swing.JScrollPane();
-        jPanelProfileGallery = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
         jLabelBio1 = new javax.swing.JLabel();
@@ -118,6 +115,8 @@ public class ProfileFrame extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jComboBoxCategory = new javax.swing.JComboBox<>();
         jButtonReset = new javax.swing.JButton();
+        jScrollPanePrivateWallpaperGallery = new javax.swing.JScrollPane();
+        jPanelProfileGallery = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Profile Page");
@@ -314,7 +313,7 @@ public class ProfileFrame extends javax.swing.JFrame {
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/pw_icon.png"))); // NOI18N
         jLabel3.setText("Password");
 
-        jCheckBox1.addActionListener(this::jCheckBox1ActionPerformed);
+        jCheckBoxShowPassword.addActionListener(this::jCheckBoxShowPasswordActionPerformed);
 
         editBtn.setBackground(new java.awt.Color(0, 0, 255));
         editBtn.setFont(new java.awt.Font("Microsoft Tai Le", 1, 14)); // NOI18N
@@ -342,7 +341,7 @@ public class ProfileFrame extends javax.swing.JFrame {
                             .addGroup(editPanelLayout.createSequentialGroup()
                                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jCheckBox1, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)))
+                                .addComponent(jCheckBoxShowPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(editPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel4)
@@ -378,16 +377,10 @@ public class ProfileFrame extends javax.swing.JFrame {
                         .addComponent(jLabel3)
                         .addGap(18, 18, 18)
                         .addGroup(editPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jCheckBox1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jCheckBoxShowPassword, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(30, Short.MAX_VALUE))
         );
-
-        jScrollPanePrivateWallpaperGallery.setBorder(null);
-
-        jPanelProfileGallery.setBackground(new java.awt.Color(41, 41, 41));
-        jPanelProfileGallery.setLayout(new java.awt.GridLayout(1, 0));
-        jScrollPanePrivateWallpaperGallery.setViewportView(jPanelProfileGallery);
 
         jPanel2.setBackground(new java.awt.Color(41, 41, 41));
 
@@ -461,6 +454,12 @@ public class ProfileFrame extends javax.swing.JFrame {
                 .addContainerGap(27, Short.MAX_VALUE))
         );
 
+        jScrollPanePrivateWallpaperGallery.setBorder(null);
+
+        jPanelProfileGallery.setBackground(new java.awt.Color(41, 41, 41));
+        jPanelProfileGallery.setLayout(new java.awt.GridLayout(1, 0));
+        jScrollPanePrivateWallpaperGallery.setViewportView(jPanelProfileGallery);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -511,7 +510,7 @@ public class ProfileFrame extends javax.swing.JFrame {
             editPasswordField.setText(currentUser.getPassword());
             editPasswordField.setEchoChar('\u25CF');
             editErrorLabel.setText("");
-            jCheckBox1.setSelected(false);
+            jCheckBoxShowPassword.setSelected(false);
             
             setSize(1080, 900);
             setLocationRelativeTo(null);
@@ -526,14 +525,14 @@ public class ProfileFrame extends javax.swing.JFrame {
         getContentPane().repaint();
     }//GEN-LAST:event_jLabelNameMouseClicked
 
-    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+    private void jCheckBoxShowPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxShowPasswordActionPerformed
         // TODO add your handling code here:
-        if (jCheckBox1.isSelected()) {
+        if (jCheckBoxShowPassword.isSelected()) {
             editPasswordField.setEchoChar((char) 0); // tampilkan
         } else {
             editPasswordField.setEchoChar('\u25CF'); // sembunyikan
         }
-    }//GEN-LAST:event_jCheckBox1ActionPerformed
+    }//GEN-LAST:event_jCheckBoxShowPasswordActionPerformed
 
     private void editBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBtnActionPerformed
         // TODO add your handling code here:
@@ -906,7 +905,7 @@ public class ProfileFrame extends javax.swing.JFrame {
     private javax.swing.JTextField editUsernameField;
     private javax.swing.JButton homeBtn;
     private javax.swing.JButton jButtonReset;
-    private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JCheckBox jCheckBoxShowPassword;
     private javax.swing.JComboBox<String> jComboBoxCategory;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
