@@ -20,7 +20,6 @@ import java.awt.*;
 import java.nio.file.StandardCopyOption;
 import models.WallpaperPrivate;
 import dao.UserDAO;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
@@ -71,6 +70,8 @@ public class ProfileFrame extends javax.swing.JFrame {
         jLabelBio.setText(bio);
         homeBtn.setContentAreaFilled(false);
         uploadBtn.setContentAreaFilled(false);
+        jButtonReset.setContentAreaFilled(false);
+
         
         getWallpaperCategoryList();
         showGalleryWallpaperUser(); 
@@ -182,17 +183,13 @@ public class ProfileFrame extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(31, 31, 31)
                 .addComponent(jLabel10)
-                .addGap(26, 26, 26)
+                .addGap(43, 43, 43)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel8)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 4, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabelName)
-                            .addComponent(jLabel9)
-                            .addComponent(jLabelBio))
-                        .addGap(9, 9, 9)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 442, Short.MAX_VALUE)
+                    .addComponent(jLabelName)
+                    .addComponent(jLabel9)
+                    .addComponent(jLabelBio)
+                    .addComponent(jLabel8))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 425, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(homeBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(logoutBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -203,25 +200,24 @@ public class ProfileFrame extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addGap(71, 71, 71)
                 .addComponent(jLabel10)
-                .addContainerGap(45, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addGap(39, 39, 39)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                                .addComponent(jLabel8)
-                                .addGap(21, 21, 21)))
+                        .addGap(39, 39, 39)
+                        .addComponent(homeBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(23, 23, 23)
+                        .addComponent(logoutBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(42, 42, 42)
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel9)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabelName, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabelBio))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(homeBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(logoutBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(22, 22, 22))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabelBio)))
+                .addGap(16, 16, 16))
         );
 
         editPanel.setBackground(new java.awt.Color(41, 41, 41));
@@ -336,28 +332,35 @@ public class ProfileFrame extends javax.swing.JFrame {
             editPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(editPanelLayout.createSequentialGroup()
                 .addGap(29, 29, 29)
-                .addGroup(editPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel11)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(editPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(editPanelLayout.createSequentialGroup()
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jCheckBoxShowPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(editPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel4)
-                    .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(editBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(editErrorLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(130, 130, 130))
+                        .addGroup(editPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel1)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(editPanelLayout.createSequentialGroup()
+                                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jCheckBoxShowPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(editPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(editBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(130, 130, 130))
+                    .addGroup(editPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel11)
+                        .addGap(31, 31, 31)
+                        .addComponent(editErrorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 382, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         editPanelLayout.setVerticalGroup(
             editPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(editPanelLayout.createSequentialGroup()
                 .addGap(15, 15, 15)
-                .addComponent(jLabel11)
+                .addGroup(editPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(editErrorLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(26, 26, 26)
                 .addGroup(editPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(editPanelLayout.createSequentialGroup()
@@ -365,9 +368,7 @@ public class ProfileFrame extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(editBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(editErrorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(editBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(editPanelLayout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addGap(18, 18, 18)
@@ -378,7 +379,7 @@ public class ProfileFrame extends javax.swing.JFrame {
                         .addGroup(editPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jCheckBoxShowPassword, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
 
         jPanel2.setBackground(new java.awt.Color(41, 41, 41));
@@ -411,6 +412,8 @@ public class ProfileFrame extends javax.swing.JFrame {
         jComboBoxCategory.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBoxCategory.addActionListener(this::jComboBoxCategoryActionPerformed);
 
+        jButtonReset.setBackground(new java.awt.Color(41, 41, 41));
+        jButtonReset.setForeground(new java.awt.Color(255, 255, 255));
         jButtonReset.setText("Reset");
         jButtonReset.addActionListener(this::jButtonResetActionPerformed);
 
@@ -473,7 +476,7 @@ public class ProfileFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(editPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(editPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -542,7 +545,52 @@ public class ProfileFrame extends javax.swing.JFrame {
             editErrorLabel.setForeground(java.awt.Color.RED);
             return;
         }
+        
+        if (newUsername.length() < 8) {
+            editErrorLabel.setText("* Username minimal 8 karakter!");
+            editErrorLabel.setForeground(java.awt.Color.RED);
+            return;
+        }
+        
+        if (newUsername.length() > 12) {
+            editErrorLabel.setText("* Username maksimal 12 karakter!");
+            editErrorLabel.setForeground(java.awt.Color.RED);
+            return;
+        }
 
+        if (newPassword.length() < 8) {
+            editErrorLabel.setText("* Password minimal 8 karakter!");
+            editErrorLabel.setForeground(java.awt.Color.RED);
+            return;
+        }
+        
+        if (newPassword.length() > 12) {
+            editErrorLabel.setText("* Password maksimal 12 karakter!");
+            editErrorLabel.setForeground(java.awt.Color.RED);
+            return;
+        }
+        
+        boolean adaSimbol = false;
+        String simbol = "!@#$%^&*()-_=+[]{};:,.<>?";
+        for (char c : newPassword.toCharArray()) {
+            if (simbol.indexOf(c) != -1) {
+                adaSimbol = true;
+                break;
+            }
+        }
+
+        if (!adaSimbol) {
+            editErrorLabel.setText("* Password harus mengandung simbol (!@#$%, dll)!");
+            editErrorLabel.setForeground(java.awt.Color.RED);
+            return;
+        }
+        
+        if (!newBio.isEmpty() && newBio.length() > 30) {
+            editErrorLabel.setText("* Bio maksimal 30 karakter!");
+            editErrorLabel.setForeground(java.awt.Color.RED);
+            return;
+        }
+        
         UserDAO userDAO = new UserDAO();
         boolean success = userDAO.updateProfile(currentUserId, newUsername, newPassword, newBio);
 
@@ -680,92 +728,105 @@ public class ProfileFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         showGalleryWallpaperUser();
     }//GEN-LAST:event_jButtonResetActionPerformed
-   
+
     private String getValidatedCategoryFromUser() {
-           
         ArrayList<String> listCategory = new ArrayList<>();
-        
+
         for (int i = 0; i < jComboBoxCategory.getItemCount(); i++) {
             Object item = jComboBoxCategory.getItemAt(i);
             if (item != null) {
                 listCategory.add(item.toString());
             }
         }
-
         String optionCategoryBaru = "+ Tambah Kategori Baru...";
         listCategory.add(optionCategoryBaru);
-        
-        JComboBox <String> comboBoxInputCategory = new JComboBox<>(listCategory.toArray(new String[0]));
-        
-        //Lamda Function
-        comboBoxInputCategory.addActionListener(e -> {
-            
-            String result;          
-            String selectedCategory = (String) comboBoxInputCategory.getSelectedItem();
-            
-            if (selectedCategory.equals(optionCategoryBaru)) {
 
+        JComboBox<String> comboBoxInputCategory = new JComboBox<>(listCategory.toArray(new String[0]));
+
+        // Lambda Function
+        comboBoxInputCategory.addActionListener(e -> {
+
+            String result;
+            String selectedCategory = (String) comboBoxInputCategory.getSelectedItem();
+
+            if (selectedCategory.equals(optionCategoryBaru)) {
                 String categoryBaru = JOptionPane.showInputDialog(this, "Masukkan Nama Kategori Baru:");
 
+                // Validasi 1: null atau kosong
                 if (categoryBaru == null || categoryBaru.trim().isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "Kategori baru tidak boleh kosong!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(this,
+                        "Kategori baru tidak boleh kosong!",
+                        "Peringatan",
+                        JOptionPane.WARNING_MESSAGE);
                     comboBoxInputCategory.setSelectedIndex(0);
                     return;
                 }
 
-                String input = categoryBaru.toLowerCase().replaceAll("\\s+", "");
-                String categoryCheck = "";
-                boolean isDuplicate = false;
+                // Validasi 2: panjang maksimal 10 karakter
+                if (categoryBaru.trim().length() > 10) {
+                    JOptionPane.showMessageDialog(this,
+                        "Nama kategori tidak boleh lebih dari 10 karakter!\n" +
+                        "Panjang saat ini: " + categoryBaru.trim().length() + " karakter.",
+                        "Kategori Terlalu Panjang",
+                        JOptionPane.WARNING_MESSAGE);
+                    comboBoxInputCategory.setSelectedIndex(0);
+                    return;
+                }
 
-                for (String exisingCategory : listCategory) {                
-                    if (!exisingCategory.equals(optionCategoryBaru)){
-                        
+                String input         = categoryBaru.toLowerCase().replaceAll("\\s+", "");
+                String categoryCheck = "";
+                boolean isDuplicate  = false;
+
+                for (String exisingCategory : listCategory) {
+                    if (!exisingCategory.equals(optionCategoryBaru)) {
                         String category = exisingCategory.toLowerCase().replaceAll("\\s+", "");
                         if (input.equals(category)) {
-                            isDuplicate = true;
+                            isDuplicate   = true;
                             categoryCheck = exisingCategory;
                             break;
                         }
-                        
-                    }          
+                    }
                 }
 
                 if (isDuplicate) {
-                    JOptionPane.showMessageDialog(this, 
+                    JOptionPane.showMessageDialog(this,
                         "Kategori " + categoryBaru + " sama dengan " + categoryCheck + " yang sudah ada.\n" +
-                        "Silakan pilih langsung '" + categoryCheck + "' pada Dropdown!", 
-                        "Kategori Sudah Ada", JOptionPane.WARNING_MESSAGE);
+                        "Silakan pilih langsung '" + categoryCheck + "' pada Dropdown!",
+                        "Kategori Sudah Ada",
+                        JOptionPane.WARNING_MESSAGE);
+                    comboBoxInputCategory.setSelectedIndex(0);
+                    return;
                 }
-                
+
                 result = (Character.toUpperCase(input.charAt(0)) + input.substring(1)).trim();
-                int indexCategoryBaru = comboBoxInputCategory.getItemCount() - 1 ;               
-                comboBoxInputCategory.insertItemAt(result,indexCategoryBaru);
+                int indexCategoryBaru = comboBoxInputCategory.getItemCount() - 1;
+                comboBoxInputCategory.insertItemAt(result, indexCategoryBaru);
                 comboBoxInputCategory.setSelectedItem(result);
-            }                      
+            }
         });
 
         int dialogConfirm = JOptionPane.showConfirmDialog(
-            this, 
-            comboBoxInputCategory, 
-            "Pilih Kategori Wallpaper", 
-            JOptionPane.OK_CANCEL_OPTION, 
+            this,
+            comboBoxInputCategory,
+            "Pilih Kategori Wallpaper",
+            JOptionPane.OK_CANCEL_OPTION,
             JOptionPane.PLAIN_MESSAGE
         );
-        
+
         if (dialogConfirm == JOptionPane.OK_OPTION) {
             String finalSelection = (String) comboBoxInputCategory.getSelectedItem();
-
             if (optionCategoryBaru.equals(finalSelection)) {
-                JOptionPane.showMessageDialog(this, "Silakan pilih kategori yang valid!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this,
+                    "Silakan pilih kategori yang valid!",
+                    "Peringatan",
+                    JOptionPane.WARNING_MESSAGE);
                 return null;
             }
-
             return finalSelection.toLowerCase();
         }
-
-        return null;    
+        return null;
     }
-    
+
     private void getWallpaperCategoryList () {        
         String getByCategorySQL = "SELECT DISTINCT LOWER(category) AS category_name FROM artworks";       
         try (Connection con = DBConnection.getConnection();

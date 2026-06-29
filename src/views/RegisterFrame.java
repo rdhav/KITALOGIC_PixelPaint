@@ -286,9 +286,21 @@ public class RegisterFrame extends javax.swing.JFrame {
             errorLabell.setForeground(java.awt.Color.RED);
             return;
         }
+        
+        if (username.length() > 12) {
+            errorLabell.setText("* Username maksimal 12 karakter!");
+            errorLabell.setForeground(java.awt.Color.RED);
+            return;
+        }
 
         if (password.length() < 8) {
             errorLabell.setText("* Password minimal 8 karakter!");
+            errorLabell.setForeground(java.awt.Color.RED);
+            return;
+        }
+        
+        if (password.length() > 12) {
+            errorLabell.setText("* Password maksimal 12 karakter!");
             errorLabell.setForeground(java.awt.Color.RED);
             return;
         }

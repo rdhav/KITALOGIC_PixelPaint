@@ -43,6 +43,7 @@ public class PublicProfileFrame extends javax.swing.JFrame {
         jScrollPanePublicWallpaperGallery.getVerticalScrollBar().setUnitIncrement(20);
         jScrollPanePublicWallpaperGallery.setWheelScrollingEnabled(true);
         
+        jButtonReset.setContentAreaFilled(false);
         bckBtn.setContentAreaFilled(false);
         bckBtn.addActionListener(e -> this.dispose());
         loadProfileData();
@@ -146,6 +147,8 @@ public class PublicProfileFrame extends javax.swing.JFrame {
         jComboBoxCategory.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBoxCategory.addActionListener(this::jComboBoxCategoryActionPerformed);
 
+        jButtonReset.setBackground(new java.awt.Color(41, 41, 41));
+        jButtonReset.setForeground(new java.awt.Color(255, 255, 255));
         jButtonReset.setText("Reset");
         jButtonReset.addActionListener(this::jButtonResetActionPerformed);
 
