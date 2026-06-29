@@ -54,8 +54,7 @@ public class ManageFrame extends javax.swing.JFrame {
         showWallpaperGalleryAll(); 
         
         jButtonDeleteUser.setContentAreaFilled(false);
-        jButtonRefresh.setContentAreaFilled(false);
-        
+        jButtonRefresh.setContentAreaFilled(false);       
     }
     
     /**
@@ -273,9 +272,9 @@ public class ManageFrame extends javax.swing.JFrame {
         if (confirm == JOptionPane.YES_OPTION) {
             
             //Mengambil semua nama file wallpaper user dalam folder uploads.
-            List<String> listWallpaperToDelete = new ArrayList<>();            
-            String getImagePathSQL = "SELECT image_path FROM artworks where user_id = ?";
-          
+            List<String> listWallpaperToDelete = new ArrayList<>();  
+            
+            String getImagePathSQL = "SELECT image_path FROM artworks where user_id = ?";         
             try (Connection con = DBConnection.getConnection();
             PreparedStatement deleteFileStmt = con.prepareStatement(getImagePathSQL)) {
 
@@ -292,8 +291,7 @@ public class ManageFrame extends javax.swing.JFrame {
             }
             
             //Delete user dari databse dan semua wallpaper dari folder uploads.
-            String deleteUserSQL = "DELETE FROM users WHERE id = ?";
-            
+            String deleteUserSQL = "DELETE FROM users WHERE id = ?";           
             try (Connection con = DBConnection.getConnection();
             PreparedStatement deleteStmt = con.prepareStatement(deleteUserSQL)) {
                  
@@ -316,6 +314,7 @@ public class ManageFrame extends javax.swing.JFrame {
                     loadUserData();                   
                     showWallpaperGalleryAll(); 
                 }
+                
             } catch (SQLException e) {
                 JOptionPane.showMessageDialog(this, "Gagal menghapus user: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -502,7 +501,6 @@ public class ManageFrame extends javax.swing.JFrame {
         jPanelHomeGallery.revalidate();
         jPanelHomeGallery.repaint();         
     }
-    
     
     /**
      * @param args the command line arguments

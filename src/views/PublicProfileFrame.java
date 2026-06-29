@@ -49,72 +49,7 @@ public class PublicProfileFrame extends javax.swing.JFrame {
         loadCategoryList();
         loadGallery();
     }
-    
-    private void loadProfileData() {
-        String sql = "SELECT username, bio FROM users WHERE id = ?";
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-
-            ps.setInt(1, profileUserId);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                String username = rs.getString("username");
-                String bio = rs.getString("bio");
-
-                usernameLabel.setText(username.toUpperCase());
-                bioLabel.setText(bio != null && !bio.isEmpty() ? bio : "No bio yet.");
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-    
-    private void loadCategoryList() {        
-        String getByCategorySQL = "SELECT DISTINCT LOWER(category) AS category_name FROM artworks";       
-        try (Connection con = DBConnection.getConnection();
-            PreparedStatement listCategory = con.prepareStatement(getByCategorySQL)) {
-            
-            ResultSet resListCategory= listCategory.executeQuery();
-            
-            jComboBoxCategory.removeAllItems();
-            
-            while (resListCategory.next()) {            
-                jComboBoxCategory.addItem(Character.toUpperCase(resListCategory.getString("category_name").charAt(0)) + resListCategory.getString("category_name").substring(1));
-            }
-            
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "gagal mendapat category", "Database Error" ,JOptionPane.ERROR_MESSAGE);
-        }       
-    }
-    
-    private void loadGallery() {
-        jPanelHomeGallery.removeAll();
-        jPanelHomeGallery.setLayout(new java.awt.GridLayout(0, 4, 10, 15));
-        jPanelHomeGallery.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 33, 20, 15));
-
-        GalleryProvider gallery = new models.WallpaperPrivate();
-        List<Wallpaper> daftarWallpaper = gallery.getGalleryWallpaper(profileUserId);
-
-        for (Wallpaper wp : daftarWallpaper) {
-            WallpaperCard card = new WallpaperCard(wp, currentUserId, this);
-            jPanelHomeGallery.add(card);
-        }
-
-        JPanel wrapper = new JPanel(new BorderLayout());
-        wrapper.setBackground(jPanelHomeGallery.getBackground());
-        wrapper.add(jPanelHomeGallery, BorderLayout.NORTH);
-
-        jScrollPanePublicWallpaperGallery.setViewportView(wrapper);
-        jScrollPanePublicWallpaperGallery.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        jScrollPanePublicWallpaperGallery.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPanePublicWallpaperGallery.getVerticalScrollBar().setUnitIncrement(20);
-
-        jPanelHomeGallery.revalidate();
-        jPanelHomeGallery.repaint();
-    }
-    
+ 
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -314,6 +249,71 @@ public class PublicProfileFrame extends javax.swing.JFrame {
         loadGallery();
     }//GEN-LAST:event_jButtonResetActionPerformed
 
+    private void loadCategoryList() {        
+        String getByCategorySQL = "SELECT DISTINCT LOWER(category) AS category_name FROM artworks";       
+        try (Connection con = DBConnection.getConnection();
+            PreparedStatement listCategory = con.prepareStatement(getByCategorySQL)) {
+            
+            ResultSet resListCategory= listCategory.executeQuery();
+            
+            jComboBoxCategory.removeAllItems();
+            
+            while (resListCategory.next()) {            
+                jComboBoxCategory.addItem(Character.toUpperCase(resListCategory.getString("category_name").charAt(0)) + resListCategory.getString("category_name").substring(1));
+            }
+            
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "gagal mendapat category", "Database Error" ,JOptionPane.ERROR_MESSAGE);
+        }       
+    } 
+    
+    private void loadGallery() {
+        jPanelHomeGallery.removeAll();
+        jPanelHomeGallery.setLayout(new java.awt.GridLayout(0, 4, 10, 15));
+        jPanelHomeGallery.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 33, 20, 15));
+
+        GalleryProvider gallery = new models.WallpaperPrivate();
+        List<Wallpaper> daftarWallpaper = gallery.getGalleryWallpaper(profileUserId);
+
+        for (Wallpaper wp : daftarWallpaper) {
+            WallpaperCard card = new WallpaperCard(wp, currentUserId, this);
+            jPanelHomeGallery.add(card);
+        }
+
+        JPanel wrapper = new JPanel(new BorderLayout());
+        wrapper.setBackground(jPanelHomeGallery.getBackground());
+        wrapper.add(jPanelHomeGallery, BorderLayout.NORTH);
+
+        jScrollPanePublicWallpaperGallery.setViewportView(wrapper);
+        jScrollPanePublicWallpaperGallery.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        jScrollPanePublicWallpaperGallery.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPanePublicWallpaperGallery.getVerticalScrollBar().setUnitIncrement(20);
+
+        jPanelHomeGallery.revalidate();
+        jPanelHomeGallery.repaint();
+    }
+    
+    private void loadProfileData() {
+        String sql = "SELECT username, bio FROM users WHERE id = ?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, profileUserId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                String username = rs.getString("username");
+                String bio = rs.getString("bio");
+
+                usernameLabel.setText(username.toUpperCase());
+                bioLabel.setText(bio != null && !bio.isEmpty() ? bio : "No bio yet.");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
     /**
      * @param args the command line arguments
      */
