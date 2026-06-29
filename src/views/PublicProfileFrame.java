@@ -166,23 +166,23 @@ public class PublicProfileFrame extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(89, 89, 89)
+                        .addGap(41, 41, 41)
+                        .addComponent(bckBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(55, 55, 55)
                         .addComponent(jLabel2)
                         .addGap(31, 31, 31)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(bioLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 814, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(usernameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 717, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(41, 41, 41)
-                        .addComponent(bckBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(96, Short.MAX_VALUE))
+                            .addComponent(usernameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 717, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(130, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addComponent(bckBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(34, 34, 34)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
@@ -190,7 +190,7 @@ public class PublicProfileFrame extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(bioLabel)
                         .addGap(12, 12, 12)))
-                .addContainerGap(38, Short.MAX_VALUE))
+                .addGap(35, 35, 35))
         );
 
         jPanel2.setBackground(new java.awt.Color(41, 41, 41));
@@ -219,13 +219,12 @@ public class PublicProfileFrame extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(95, 95, 95)
+                .addGap(47, 47, 47)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(bioLabel1)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(usernameLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel7)))
+                    .addComponent(usernameLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jComboBoxCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -235,18 +234,18 @@ public class PublicProfileFrame extends javax.swing.JFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(usernameLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(bioLabel1)
-                .addContainerGap(9, Short.MAX_VALUE))
-            .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
                     .addComponent(jComboBoxCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonReset))
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 23, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(usernameLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(bioLabel1)
+                .addContainerGap())
         );
 
         jScrollPanePublicWallpaperGallery.setBackground(new java.awt.Color(41, 41, 41));
@@ -285,19 +284,27 @@ public class PublicProfileFrame extends javax.swing.JFrame {
 
     private void jComboBoxCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxCategoryActionPerformed
         // TODO add your handling code here:
-        String selectedCategory = (String)jComboBoxCategory.getSelectedItem();
+        String selectedCategory = (String) jComboBoxCategory.getSelectedItem();
+        if (selectedCategory == null) return;
 
         GalleryProvider gallery = new WallpaperPrivate();
-        List<Wallpaper> daftarWallpaper =  gallery.getGalleryWallpaper(currentUserId);
+        List<Wallpaper> daftarWallpaper = gallery.getGalleryWallpaper(profileUserId); 
         List<Wallpaper> filteredDaftarWallpaper = gallery.filterByCategory(daftarWallpaper, selectedCategory);
 
         jPanelHomeGallery.removeAll();
+        jPanelHomeGallery.setLayout(new java.awt.GridLayout(0, 4, 10, 15));
+        jPanelHomeGallery.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 33, 20, 15));
 
         for (Wallpaper wp : filteredDaftarWallpaper) {
             WallpaperCard card = new WallpaperCard(wp, currentUserId, this);
             jPanelHomeGallery.add(card);
         }
 
+        JPanel wrapper = new JPanel(new BorderLayout());
+        wrapper.setBackground(jPanelHomeGallery.getBackground());
+        wrapper.add(jPanelHomeGallery, BorderLayout.NORTH);
+
+        jScrollPanePublicWallpaperGallery.setViewportView(wrapper);
         jPanelHomeGallery.revalidate();
         jPanelHomeGallery.repaint();
     }//GEN-LAST:event_jComboBoxCategoryActionPerformed
