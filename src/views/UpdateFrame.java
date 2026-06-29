@@ -96,14 +96,14 @@ public class UpdateFrame extends javax.swing.JFrame {
         jButtonConfirmEdit.setBackground(new java.awt.Color(41, 41, 41));
         jButtonConfirmEdit.setFont(new java.awt.Font("Microsoft YaHei", 1, 14)); // NOI18N
         jButtonConfirmEdit.setForeground(new java.awt.Color(255, 255, 255));
-        jButtonConfirmEdit.setText("Ok");
+        jButtonConfirmEdit.setText("Update");
         jButtonConfirmEdit.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonConfirmEdit.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jButtonConfirmEdit.addActionListener(this::jButtonConfirmEditActionPerformed);
 
         jLabelUploaderName.setFont(new java.awt.Font("Microsoft YaHei", 0, 12)); // NOI18N
         jLabelUploaderName.setForeground(new java.awt.Color(255, 255, 255));
-        jLabelUploaderName.setText("username");
+        jLabelUploaderName.setText("Uploader Name");
         jLabelUploaderName.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         jLabelDate.setFont(new java.awt.Font("Microsoft YaHei", 0, 12)); // NOI18N
@@ -124,11 +124,13 @@ public class UpdateFrame extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(22, 22, 22)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabelDate, javax.swing.GroupLayout.PREFERRED_SIZE, 519, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabelUploaderName)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButtonConfirmEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabelDate, javax.swing.GroupLayout.PREFERRED_SIZE, 519, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(319, 319, 319)
+                                .addComponent(jButtonConfirmEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jComboBoxCategory, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -142,13 +144,13 @@ public class UpdateFrame extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(19, 19, 19)
                 .addComponent(jTextFieldImageTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabelUploaderName, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextFieldDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(16, 16, 16)
-                .addComponent(jLabelDate, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabelUploaderName, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10)
+                .addComponent(jTextFieldDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12)
+                .addComponent(jLabelDate, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jComboBoxCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(15, 15, 15)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -196,43 +198,70 @@ public class UpdateFrame extends javax.swing.JFrame {
     private void jButtonConfirmEditActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:   
         String updatedImageTitle = jTextFieldImageTitle.getText().trim();
-        String updatedDesc = jTextFieldDescription.getText().trim();
-        String updatedCategory = (String) jComboBoxCategory.getSelectedItem();
-        
+        String updatedDesc       = jTextFieldDescription.getText().trim();
+        String updatedCategory   = (String) jComboBoxCategory.getSelectedItem();
+
         if (updatedImageTitle.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Judul tidak boleh kosong!", "Warning!", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                "Judul tidak boleh kosong!",
+                "Warning!",
+                JOptionPane.WARNING_MESSAGE);
             return;
         }
-        
+
+        if (updatedImageTitle.length() > 15) {
+            JOptionPane.showMessageDialog(this,
+                "Judul terlalu panjang! Maksimal 15 karakter.\n" +
+                "Panjang saat ini: " + updatedImageTitle.length() + " karakter.",
+                "Warning!",
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (!updatedDesc.isEmpty() && updatedDesc.length() > 20) {
+            JOptionPane.showMessageDialog(this,
+                "Deskripsi terlalu panjang! Maksimal 20 karakter.\n" +
+                "Panjang saat ini: " + updatedDesc.length() + " karakter.",
+                "Warning!",
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
         if (updatedCategory == null || updatedCategory.equals("+ Tambah Kategori Baru...")) {
-            JOptionPane.showMessageDialog(this, "Silakan pilih kategori yang valid!", "Warning", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                "Silakan pilih kategori yang valid!",
+                "Warning",
+                JOptionPane.WARNING_MESSAGE);
             return;
         }
 
         String updateSQL = "UPDATE artworks SET title = ?, description = ?, category = ? WHERE id = ?";
-   
+
         try (Connection con = DBConnection.getConnection();
-            PreparedStatement updateWallpaper = con.prepareStatement(updateSQL)) {
-            
-            updateWallpaper.setString(1,updatedImageTitle);
-            updateWallpaper.setString(2,updatedDesc);
-            updateWallpaper.setString(3,updatedCategory);
-            updateWallpaper.setInt(4,wallpaperInfo.getId());
-            
-            int updateSucess = updateWallpaper.executeUpdate();
-            
-            if (updateSucess > 0){
+             PreparedStatement updateWallpaper = con.prepareStatement(updateSQL)) {
+
+            updateWallpaper.setString(1, updatedImageTitle);
+            updateWallpaper.setString(2, updatedDesc);
+            updateWallpaper.setString(3, updatedCategory);
+            updateWallpaper.setInt(4, wallpaperInfo.getId());
+
+            int updateSuccess = updateWallpaper.executeUpdate();
+
+            if (updateSuccess > 0) {
                 JOptionPane.showMessageDialog(this, "Data berhasil diperbarui!");
                 this.dispose();
-            }      
-            
-            if(this.mainFrame instanceof ManageFrame manageFrame)manageFrame.showWallpaperGalleryAll();
-        
+            }
+
+            if (this.mainFrame instanceof ManageFrame manageFrame) {
+                manageFrame.showWallpaperGalleryAll();
+            }
+
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "gagal melakukan update", "Error" ,JOptionPane.ERROR_MESSAGE);
-        } 
-        
-        
+            JOptionPane.showMessageDialog(this,
+                "Gagal melakukan update.",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {
@@ -241,28 +270,51 @@ public class UpdateFrame extends javax.swing.JFrame {
     }
     
     private String getValidatedCategoryFromUser() {
-        
-        ArrayList<String> listCategory = new ArrayList<>();     
+
+        ArrayList<String> listCategory = new ArrayList<>();
         for (int i = 0; i < jComboBoxCategory.getItemCount(); i++) {
             Object item = jComboBoxCategory.getItemAt(i);
             if (item != null && !item.equals("+ Tambah Kategori Baru...")) {
                 listCategory.add(item.toString());
             }
         }
-        
+
         String newCategory = JOptionPane.showInputDialog(this, "Masukkan Nama Kategori Baru:");
-        
-        String normalizedInput = newCategory.trim().substring(0, 1).toUpperCase() + newCategory.trim().substring(1).toLowerCase();
-        
+
+        // Validasi 1: null atau kosong (user klik Cancel / tidak mengisi apapun)
+        if (newCategory == null || newCategory.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                "Kategori baru tidak boleh kosong!",
+                "Peringatan",
+                JOptionPane.WARNING_MESSAGE);
+            return null;
+        }
+
+        // Validasi 2: panjang maksimal 10 karakter
+        if (newCategory.trim().length() > 10) {
+            JOptionPane.showMessageDialog(this,
+                "Nama kategori tidak boleh lebih dari 10 karakter!\n" +
+                "Panjang saat ini: " + newCategory.trim().length() + " karakter.",
+                "Kategori Terlalu Panjang",
+                JOptionPane.WARNING_MESSAGE);
+            return null;
+        }
+
+        // Validasi 3: duplikat (case-insensitive)
+        String normalizedInput = newCategory.trim().substring(0, 1).toUpperCase()
+                + newCategory.trim().substring(1).toLowerCase();
+
         for (String categoryName : listCategory) {
             if (categoryName.equalsIgnoreCase(normalizedInput)) {
-                JOptionPane.showMessageDialog(this, "Kategori '" + normalizedInput + "' sudah ada!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this,
+                    "Kategori '" + normalizedInput + "' sudah ada!",
+                    "Peringatan",
+                    JOptionPane.WARNING_MESSAGE);
                 return null;
             }
         }
-        
-       return newCategory; 
-       
+
+        return normalizedInput;
     }
 
     private void getWallpaperCategoryList() {        
