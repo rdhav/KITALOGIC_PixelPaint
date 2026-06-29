@@ -430,90 +430,103 @@ public class HomeFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonResetActionPerformed
     
     private String getValidatedCategoryFromUser() {
-           
         ArrayList<String> listCategory = new ArrayList<>();
-        
+
         for (int i = 0; i < jComboBoxCategory.getItemCount(); i++) {
             Object item = jComboBoxCategory.getItemAt(i);
             if (item != null) {
                 listCategory.add(item.toString());
             }
         }
-
         String optionCategoryBaru = "+ Tambah Kategori Baru...";
         listCategory.add(optionCategoryBaru);
-        
-        JComboBox <String> comboBoxInputCategory = new JComboBox<>(listCategory.toArray(new String[0]));
-        
-        //Lamda Function
+
+        JComboBox<String> comboBoxInputCategory = new JComboBox<>(listCategory.toArray(new String[0]));
+
+        // Lambda Function
         comboBoxInputCategory.addActionListener(e -> {
-            
-            String result;          
+
+            String result;
             String selectedCategory = (String) comboBoxInputCategory.getSelectedItem();
-            
+
             if (selectedCategory.equals(optionCategoryBaru)) {
+                String categoryBaru = JOptionPane.showInputDialog(this, "Masukkan Nama Kategori Baru:");
 
-                String newCategory = JOptionPane.showInputDialog(this, "Masukkan Nama Kategori Baru:");
-
-                if (newCategory == null || newCategory.trim().isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "Kategori baru tidak boleh kosong!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+                // Validasi 1: null atau kosong
+                if (categoryBaru == null || categoryBaru.trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(this,
+                        "Kategori baru tidak boleh kosong!",
+                        "Peringatan",
+                        JOptionPane.WARNING_MESSAGE);
                     comboBoxInputCategory.setSelectedIndex(0);
                     return;
                 }
 
-                String input = newCategory.toLowerCase().replaceAll("\\s+", "");
-                String categoryCheck = "";
-                boolean isDuplicate = false;
+                // Validasi 2: panjang maksimal 10 karakter
+                if (categoryBaru.trim().length() > 10) {
+                    JOptionPane.showMessageDialog(this,
+                        "Nama kategori tidak boleh lebih dari 10 karakter!\n" +
+                        "Panjang saat ini: " + categoryBaru.trim().length() + " karakter.",
+                        "Kategori Terlalu Panjang",
+                        JOptionPane.WARNING_MESSAGE);
+                    comboBoxInputCategory.setSelectedIndex(0);
+                    return;
+                }
 
-                for (String exisingCategory : listCategory) {                
-                    if (!exisingCategory.equals(optionCategoryBaru)){
-                        
+                String input         = categoryBaru.toLowerCase().replaceAll("\\s+", "");
+                String categoryCheck = "";
+                boolean isDuplicate  = false;
+
+                for (String exisingCategory : listCategory) {
+                    if (!exisingCategory.equals(optionCategoryBaru)) {
                         String category = exisingCategory.toLowerCase().replaceAll("\\s+", "");
                         if (input.equals(category)) {
-                            isDuplicate = true;
+                            isDuplicate   = true;
                             categoryCheck = exisingCategory;
                             break;
                         }
-                        
-                    }          
+                    }
                 }
 
                 if (isDuplicate) {
-                    JOptionPane.showMessageDialog(this, 
-                        "Kategori " + newCategory + " sama dengan " + categoryCheck + " yang sudah ada.\n" +
-                        "Silakan pilih langsung '" + categoryCheck + "' pada Dropdown!", 
-                        "Kategori Sudah Ada", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(this,
+                        "Kategori " + categoryBaru + " sama dengan " + categoryCheck + " yang sudah ada.\n" +
+                        "Silakan pilih langsung '" + categoryCheck + "' pada Dropdown!",
+                        "Kategori Sudah Ada",
+                        JOptionPane.WARNING_MESSAGE);
+                    comboBoxInputCategory.setSelectedIndex(0);
+                    return;
                 }
-                
+
                 result = (Character.toUpperCase(input.charAt(0)) + input.substring(1)).trim();
-                int indexCategoryBaru = comboBoxInputCategory.getItemCount() - 1 ;               
-                comboBoxInputCategory.insertItemAt(result,indexCategoryBaru);
+                int indexCategoryBaru = comboBoxInputCategory.getItemCount() - 1;
+                comboBoxInputCategory.insertItemAt(result, indexCategoryBaru);
                 comboBoxInputCategory.setSelectedItem(result);
-            }                      
+            }
         });
 
         int dialogConfirm = JOptionPane.showConfirmDialog(
-            this, 
-            comboBoxInputCategory, 
-            "Pilih Kategori Wallpaper", 
-            JOptionPane.OK_CANCEL_OPTION, 
+            this,
+            comboBoxInputCategory,
+            "Pilih Kategori Wallpaper",
+            JOptionPane.OK_CANCEL_OPTION,
             JOptionPane.PLAIN_MESSAGE
         );
-        
+
         if (dialogConfirm == JOptionPane.OK_OPTION) {
             String finalSelection = (String) comboBoxInputCategory.getSelectedItem();
-
             if (optionCategoryBaru.equals(finalSelection)) {
-                JOptionPane.showMessageDialog(this, "Silakan pilih kategori yang valid!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this,
+                    "Silakan pilih kategori yang valid!",
+                    "Peringatan",
+                    JOptionPane.WARNING_MESSAGE);
                 return null;
             }
-
             return finalSelection.toLowerCase();
         }
-
-        return null;    
+        return null;
     }
-    
+
     private void getWallpaperCategoryList() {        
         String getByCategorySQL = "SELECT DISTINCT LOWER(category) AS category_name FROM artworks";       
         try (Connection con = DBConnection.getConnection();
