@@ -67,7 +67,7 @@ public class ProfileFrame extends javax.swing.JFrame {
         }
         
         jLabelBio.setText(bio);
-        
+        this.setTitle(this.currentUser.getDashboardTitle());
         homeBtn.setContentAreaFilled(false);
         uploadBtn.setContentAreaFilled(false);
         
@@ -851,4 +851,8 @@ public class ProfileFrame extends javax.swing.JFrame {
     private javax.swing.JButton logoutBtn;
     private javax.swing.JButton uploadBtn;
     // End of variables declaration//GEN-END:variables
+
+    private void setTitle() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

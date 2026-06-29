@@ -39,6 +39,7 @@ public class ManageFrame extends javax.swing.JFrame {
         this.adminUser = adminUser;
         
         initComponents();
+        this.setTitle(adminUser.getDashboardTitle());
         jScrollPanePublicWallpaperGallery.setBorder(null);
         jScrollPanePublicWallpaperGallery.getVerticalScrollBar().setPreferredSize(new java.awt.Dimension(0, 0));
         jScrollPanePublicWallpaperGallery.getHorizontalScrollBar().setPreferredSize(new java.awt.Dimension(0, 0));
@@ -526,7 +527,7 @@ public class ManageFrame extends javax.swing.JFrame {
 
         /* Create and display the form */
             java.awt.EventQueue.invokeLater(() -> {
-                AdminUser dummyAdmin = new AdminUser(1, "", "", "");
+                AdminUser dummyAdmin = new AdminUser(1, "Admin", "", "");
                 new ManageFrame(dummyAdmin).setVisible(true);
             });
     }    
@@ -545,4 +546,8 @@ public class ManageFrame extends javax.swing.JFrame {
     private javax.swing.JButton logoutBtn;
     private javax.swing.JLabel usernameLabel;
     // End of variables declaration//GEN-END:variables
+
+    private String getDashboardTitle() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }
