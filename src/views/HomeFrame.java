@@ -68,14 +68,12 @@ public class HomeFrame extends javax.swing.JFrame {
         uploadBtn.setContentAreaFilled(false);
         loginBtn.setContentAreaFilled(false);
         jButtonReset.setContentAreaFilled(false);
-        
-        
+              
         profileBtn.setVisible(isUserLoggedIn);
         uploadBtn.setVisible(isUserLoggedIn);
         loginBtn.setVisible(isUserLoggedIn == false);
         
-        jLabelUsernameHomePage.setText(currentUsername.toUpperCase());  
-        
+        jLabelUsernameHomePage.setText(currentUsername.toUpperCase());       
         getWallpaperCategoryList();
         showWallpaperGalleryAll();       
     }
@@ -337,13 +335,33 @@ public class HomeFrame extends javax.swing.JFrame {
             targetDirectory.mkdirs();
         }
         
-        String title = JOptionPane.showInputDialog(this, "Masukkan Judul Wallpaper:");      
-        if (title == null) {
-            JOptionPane.showMessageDialog(this, "Wallpaper harus diberikan title!");
-            return;
-        }
+        String title = "";
+                    
+            while(title.length() > 15 || title.isEmpty()) {
+                
+            title = JOptionPane.showInputDialog(this, "(15 karakter!) Masukkan Judul Wallpaper:");
+                
+                if (title.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Wallpaper harus diberikan title!");
+                } else if (title.length() > 15) {
+                    JOptionPane.showMessageDialog(this, "Wallpaper title terlalu panjang!");            
+                }   
+            } 
         
-        String description = JOptionPane.showInputDialog(this, "(Boleh di skip!) Masukkan Deskripsi:");
+        String description = JOptionPane.showInputDialog(this, "(Boleh di skip!)Masukkan Deskripsi:");
+        
+        if (!description.isEmpty()) {
+            
+            while (description.length() > 20) {
+                
+                if (description.length() > 20) {
+                    JOptionPane.showMessageDialog(this, "Wallpaper description terlalu panjang!");
+                }   
+                
+                description = JOptionPane.showInputDialog(this, "(Boleh di skip!)Masukkan Deskripsi:");
+                
+            }        
+        }
         
         String category = getValidatedCategoryFromUser();      
         if (category == null) {
