@@ -592,33 +592,28 @@ public class ProfileFrame extends javax.swing.JFrame {
             targetDirectory.mkdirs();
         }
         
-        String title = "";
-                    
-            while(title.length() > 15 || title.isEmpty()) {
-                
+        String title = "";                   
+            while(title.trim().length() > 15 || title.trim().isEmpty()) {               
             title = JOptionPane.showInputDialog(this, "(15 karakter!) Masukkan Judul Wallpaper:");
                 
-                if (title.isEmpty()) {
+                if (title.trim().isEmpty()) {
                     JOptionPane.showMessageDialog(this, "Wallpaper harus diberikan title!");
                 } else if (title.length() > 15) {
                     JOptionPane.showMessageDialog(this, "Wallpaper title terlalu panjang!");            
                 }   
-            }        
+            } 
         
-        
-        String description = JOptionPane.showInputDialog(this, "(Boleh di skip!)Masukkan Deskripsi:");
-        
-        if (!description.isEmpty()) {
-            
-            while (description.length() > 20) {
-                
-                if (description.length() > 20) {
-                    JOptionPane.showMessageDialog(this, "Wallpaper description terlalu panjang!");
-                }              
-                description = JOptionPane.showInputDialog(this, "(Boleh di skip!)Masukkan Deskripsi:");
-                
-            }        
-        }
+        String description = JOptionPane.showInputDialog(this, "(Boleh di skip!)Masukkan Deskripsi:");       
+            if (!description.trim().isEmpty()) {
+                while (description.length() > 20) {
+
+                    if (description.length() > 20) {
+                        JOptionPane.showMessageDialog(this, "Wallpaper description terlalu panjang!");
+                    }   
+
+                    description = JOptionPane.showInputDialog(this, "(Boleh di skip!)Masukkan Deskripsi:");
+                }        
+            }
         
         
         String category = getValidatedCategoryFromUser();      
