@@ -62,11 +62,9 @@ public class UserDAO {
     
      /**
      * Mendaftarkan pengguna baru ke dalam sistem.
-     * <p>
      * Metode ini terlebih dahulu memeriksa apakah username sudah digunakan.
      * Jika belum, data pengguna baru akan disimpan ke database dengan role
      * default {@code "user"} dan bio kosong.
-     * </p>
      *
      * @param username nama pengguna yang ingin didaftarkan
      * @param password kata sandi pengguna baru
