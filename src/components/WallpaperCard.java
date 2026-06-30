@@ -9,18 +9,51 @@ import views.DetailFrame;
 import java.awt.image.BufferedImage;
 import java.awt.event.MouseAdapter;
 
+
+/**
+ * Komponen kartu visual yang menampilkan satu wallpaper dalam bentuk gambar
+ * dengan overlay informasi (judul, kategori, dan nama pengunggah) yang
+ * muncul secara animasi saat kursor dihover di atas kartu.
+ * Kartu ini digunakan secara berulang di berbagai halaman galeri seperti
+ * {@code HomeFrame}, {@code ProfileFrame}, dan {@code ManageFrame} untuk
+ * menampilkan koleksi wallpaper dalam bentuk grid.
+ *
+ */
+
 public class WallpaperCard extends javax.swing.JPanel {
 
+    /** Lebar tetap (dalam piksel) untuk setiap kartu wallpaper. */
+    private static final int MAX_LEBAR = 245;
+ 
+    /** Tinggi tetap (dalam piksel) untuk gambar wallpaper di dalam kartu. */
+    private static final int MAX_TINGGI_GAMBAR = 250;
+ 
+    /** Data wallpaper yang ditampilkan oleh kartu ini. */
     private final Wallpaper wallpaperInfo;
+ 
+    /** Referensi ke frame induk tempat kartu ini ditampilkan. */
     private final JFrame mainFrame;
+ 
+    /** ID user yang sedang login (atau -1 jika belum login/guest). */
     private final int currentUserId;
-
+ 
+    /** Label yang menampilkan gambar wallpaper. */
     private JLabel jLabelImage;
+ 
+    /** Label yang menampilkan judul wallpaper pada overlay. */
     private JLabel jLabelImageTitle;
 
-    private static final int MAX_LEBAR = 245;
-    private static final int MAX_TINGGI_GAMBAR = 250;
-
+    
+    /**
+     * Membuat kartu wallpaper baru berdasarkan data wallpaper yang diberikan.
+     *
+     * @param wp            objek {@link Wallpaper} yang berisi data wallpaper
+     *                      (judul, kategori, path gambar, dll)
+     * @param currentUserId ID user yang sedang login; gunakan {@code -1}
+     *                      jika user belum login (guest)
+     * @param mainFrame     frame induk yang memanggil kartu ini, digunakan
+     *                      untuk menentukan perilaku navigasi saat kartu diklik
+     */
     public WallpaperCard(Wallpaper wp, int currentUserId, JFrame mainFrame) {
         this.wallpaperInfo = wp;
         this.currentUserId = currentUserId;
@@ -28,6 +61,19 @@ public class WallpaperCard extends javax.swing.JPanel {
         buildCard();
     }
     
+    
+    /**
+     * Menskalakan dan memotong (crop) gambar asli agar pas mengisi ukuran
+     * target tanpa distorsi rasio, lalu memberi sudut membulat (rounded corner).
+     * Gambar di-scale terlebih dahulu mengikuti sisi yang lebih besar antara
+     * lebar dan tinggi target, kemudian bagian tengah gambar dipotong agar
+     * sesuai ukuran target persis (mirip efek {@code object-fit: cover} pada CSS).
+     *
+     * @param original gambar asli yang akan diproses
+     * @param targetW  lebar target hasil akhir (piksel)
+     * @param targetH  tinggi target hasil akhir (piksel)
+     * @return gambar hasil scale dan crop dengan sudut membulat
+     */
     private Image scaleAndCrop(Image original, int targetW, int targetH) {
         BufferedImage bi = new BufferedImage(
             original.getWidth(null), original.getHeight(null), BufferedImage.TYPE_INT_ARGB
@@ -62,6 +108,14 @@ public class WallpaperCard extends javax.swing.JPanel {
         return result;
     }
 
+    
+    /**
+     * Membangun seluruh tampilan kartu: memuat gambar wallpaper, menyiapkan
+     * overlay informasi (judul, kategori, author), serta memasang animasi
+     * fade in/out saat kursor hover di atas kartu.
+     * Method ini dipanggil otomatis dari constructor dan tidak perlu
+     * dipanggil ulang secara manual.
+     */
     private void buildCard() {
         if (wallpaperInfo == null) {
             System.out.println("Error: Data wallpaper tidak ditemukan.");
@@ -72,6 +126,7 @@ public class WallpaperCard extends javax.swing.JPanel {
         setOpaque(false);
         setCursor(new Cursor(Cursor.HAND_CURSOR));
 
+         // ===== Muat gambar wallpaper =====
         File fileGambar = new File("src/uploads/" + wallpaperInfo.getImagePath());
         ImageIcon originalIcon;
 
@@ -89,6 +144,7 @@ public class WallpaperCard extends javax.swing.JPanel {
         jLabelImage.setHorizontalAlignment(SwingConstants.CENTER);
         jLabelImage.setBounds(0, 0, targetWidth, targetHeight);
 
+        // ===== Siapkan overlay informasi (judul, kategori, author) =====
         final float[] alpha = {0f};
         final javax.swing.Timer[] timer = {null};
 
@@ -182,6 +238,17 @@ public class WallpaperCard extends javax.swing.JPanel {
         setMaximumSize(ukuranCard);
     }
 
+    
+    /**
+     * Mengubah huruf pertama setiap kata dalam teks menjadi kapital,
+     * sementara sisanya menjadi huruf kecil (title case).
+     * Contoh: {@code "sunset OVER mountains"} akan menjadi
+     * {@code "Sunset Over Mountains"}.
+     *
+     * @param teks teks yang akan diformat; boleh {@code null} atau kosong
+     * @return teks dengan format title case, atau string kosong jika
+     *         input {@code null}/kosong
+     */
     private String kapitalHurufAwal(String teks) {
         if (teks == null || teks.isEmpty()) return "";
         String[] kata = teks.split(" ");
@@ -196,12 +263,29 @@ public class WallpaperCard extends javax.swing.JPanel {
         return hasil.toString().trim();
     }
 
+    
+    /**
+     * Memotong teks jika panjangnya melebihi batas maksimum karakter,
+     * lalu menambahkan tanda elipsis ({@code "..."}) di akhir teks.
+     *
+     * @param teks         teks yang akan diperiksa; boleh {@code null}
+     * @param maksKarakter jumlah maksimum karakter sebelum teks dipotong
+     * @return teks asli jika panjangnya masih dalam batas, teks terpotong
+     *         dengan akhiran {@code "..."} jika melebihi batas, atau string
+     *         kosong jika input {@code null}
+     */
     private String potongTeksJikaPanjang(String teks, int maksKarakter) {
         if (teks == null) return "";
         if (teks.length() <= maksKarakter) return teks;
         return teks.substring(0, maksKarakter) + "...";
     }
 
+    
+    /**
+     * Membuka {@link DetailFrame} untuk menampilkan detail lengkap dari
+     * wallpaper yang direpresentasikan oleh kartu ini. Dipanggil saat
+     * kartu (gambar atau overlay) diklik oleh pengguna.
+     */
     private void bukaDetail() {
         try {
             File fileGambar = new File("src/uploads/" + wallpaperInfo.getImagePath());
